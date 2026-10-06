@@ -165,27 +165,11 @@ section {
   color: var(--navy);
 }
 
-.brand-mark {
-  font-size: 1.6rem;
-  font-weight: 900;
-  letter-spacing: 1px;
-  background: linear-gradient(90deg, var(--navy), var(--red));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.brand-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand span.tag {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
+.brand img {
+  height: 48px;
+  width: 48px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .nav-links {

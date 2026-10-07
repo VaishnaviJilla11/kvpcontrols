@@ -69,6 +69,17 @@
     setProductView(savedView);
   }
 
+  /* ---------------- Product card "View Details" toggle ---------------- */
+  document.querySelectorAll(".details-toggle").forEach(function (btn) {
+    const panel = btn.nextElementSibling;
+    if (!panel) return;
+    btn.addEventListener("click", function () {
+      const isOpen = panel.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(isOpen));
+      btn.querySelector(".label").textContent = isOpen ? "Hide Details" : "View Details";
+    });
+  });
+
   const productsCount = document.getElementById("productsCount");
   if (productsCount && productGrid) {
     const total = productGrid.querySelectorAll(".product-card").length;

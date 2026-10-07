@@ -810,6 +810,44 @@ section {
   font-size: 0.75rem;
 }
 
+.details-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0 0 12px;
+  margin: 0;
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.details-toggle:hover {
+  color: var(--red);
+}
+
+.details-toggle .chevron {
+  display: inline-block;
+  transition: transform 0.2s ease;
+  font-size: 0.75rem;
+}
+
+.details-toggle[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+.product-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.product-collapsible.open {
+  max-height: 320px;
+}
+
 .product-footer {
   margin-top: auto;
   display: flex;
@@ -1086,9 +1124,42 @@ section {
     grid-template-columns: 1fr;
   }
 
-  .product-grid.view-grid,
+  .product-grid.view-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
   .product-grid.view-list {
     grid-template-columns: 1fr;
+  }
+
+  /* Shrink card chrome so 2-up grid cards stay readable on phone widths */
+  .view-grid .product-media {
+    padding: 14px;
+  }
+
+  .view-grid .icon-tile {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 1.6rem;
+  }
+
+  .view-grid .product-body {
+    padding: 14px 14px 18px;
+  }
+
+  .view-grid .product-body h3 {
+    font-size: 1rem;
+  }
+
+  .view-grid .desc {
+    display: none;
+  }
+
+  .view-grid .product-features li,
+  .view-grid .price-table {
+    font-size: 0.75rem;
   }
 
   .view-list .product-card {

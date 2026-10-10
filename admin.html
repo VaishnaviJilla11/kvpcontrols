@@ -78,7 +78,10 @@
         Address
         <textarea id="fAddress" rows="2" placeholder="Street, area, pincode" required></textarea>
       </label>
-      <button type="submit" class="btn btn-primary" id="submitBtn">Save Dealer to Website</button>
+      <div class="admin-form-inline">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Save Dealer to Website</button>
+        <button type="button" id="cancelEditBtn" class="btn-text-danger" hidden>Cancel Edit</button>
+      </div>
     </form>
     <p id="saveStatus" class="admin-status"></p>
   </section>

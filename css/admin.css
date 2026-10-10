@@ -175,6 +175,20 @@
   text-decoration: underline;
 }
 
+.btn-text-navy {
+  background: none;
+  border: none;
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-text-navy:hover {
+  text-decoration: underline;
+}
+
 .district-chips {
   display: flex;
   flex-wrap: wrap;

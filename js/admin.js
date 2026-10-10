@@ -19,6 +19,7 @@
   const addressInput = document.getElementById("fAddress");
   const form = document.getElementById("dealerForm");
   const submitBtn = document.getElementById("submitBtn");
+  const cancelEditBtn = document.getElementById("cancelEditBtn");
   const saveStatus = document.getElementById("saveStatus");
   const rowsBody = document.getElementById("adminDealerRows");
   const refreshBtn = document.getElementById("refreshBtn");
@@ -28,9 +29,36 @@
   const districtStatus = document.getElementById("districtStatus");
 
   let currentData = { districts: [], dealers: [] };
+  let editingIndex = null;
 
   phoneInput.addEventListener("input", function () {
     phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+  });
+
+  function enterEditMode(index) {
+    const dealer = currentData.dealers[index];
+    editingIndex = index;
+    districtSelect.value = dealer.district;
+    nameInput.value = dealer.name;
+    phoneInput.value = dealer.phone;
+    addressInput.value = dealer.address;
+    submitBtn.textContent = "Update Dealer";
+    cancelEditBtn.hidden = false;
+    setStatus(saveStatus, "Editing \u201c" + dealer.name + "\u201d.", "neutral");
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function exitEditMode() {
+    editingIndex = null;
+    form.reset();
+    districtSelect.selectedIndex = 0;
+    submitBtn.textContent = "Save Dealer to Website";
+    cancelEditBtn.hidden = true;
+  }
+
+  cancelEditBtn.addEventListener("click", function () {
+    exitEditMode();
+    setStatus(saveStatus, "", "");
   });
 
   function getCreds() {
@@ -111,7 +139,10 @@
           "<td>" + escapeHtml(dealer.name) + "</td>" +
           "<td>" + escapeHtml(dealer.phone) + "</td>" +
           "<td>" + escapeHtml(dealer.address) + "</td>" +
-          '<td><button type="button" class="btn-text-danger" data-remove="' + index + '">Remove</button></td>' +
+          "<td>" +
+          '<button type="button" class="btn-text-navy" data-edit="' + index + '">Edit</button> ' +
+          '<button type="button" class="btn-text-danger" data-remove="' + index + '">Remove</button>' +
+          "</td>" +
           "</tr>"
         );
       })
@@ -186,21 +217,36 @@
       phone: phoneInput.value.trim(),
       address: addressInput.value.trim(),
     };
-    currentData.dealers = (currentData.dealers || []).concat([dealer]);
 
-    const ok = await saveToWorker("Add dealer: " + dealer.name + " (" + dealer.district + ")");
+    const isEditing = editingIndex !== null;
+    const backup = currentData.dealers.slice();
+    if (isEditing) {
+      currentData.dealers[editingIndex] = dealer;
+    } else {
+      currentData.dealers = (currentData.dealers || []).concat([dealer]);
+    }
+
+    const message = isEditing
+      ? "Update dealer: " + dealer.name + " (" + dealer.district + ")"
+      : "Add dealer: " + dealer.name + " (" + dealer.district + ")";
+    const ok = await saveToWorker(message);
     submitBtn.disabled = false;
     if (ok) {
       renderTable();
-      form.reset();
-      districtSelect.selectedIndex = 0;
-      setStatus(saveStatus, "Saved! The live site will update within about a minute.", "success");
+      exitEditMode();
+      setStatus(saveStatus, (isEditing ? "Updated! " : "Saved! ") + "The live site will update within about a minute.", "success");
     } else {
-      currentData.dealers.pop();
+      currentData.dealers = backup;
     }
   });
 
   rowsBody.addEventListener("click", async function (event) {
+    const editBtn = event.target.closest("[data-edit]");
+    if (editBtn) {
+      enterEditMode(Number(editBtn.dataset.edit));
+      return;
+    }
+
     const btn = event.target.closest("[data-remove]");
     if (!btn) return;
     const index = Number(btn.dataset.remove);
@@ -214,6 +260,7 @@
     const ok = await saveToWorker("Remove dealer: " + removed.name);
     if (ok) {
       renderTable();
+      if (editingIndex === index) exitEditMode();
       setStatus(saveStatus, "Removed. The live site will update within about a minute.", "success");
     } else {
       currentData.dealers = backup;

@@ -31,6 +31,10 @@
   let currentSha = null;
   let currentData = { districts: [], dealers: [] };
 
+  phoneInput.addEventListener("input", function () {
+    phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+  });
+
   function getToken() {
     try {
       return localStorage.getItem(TOKEN_KEY) || "";

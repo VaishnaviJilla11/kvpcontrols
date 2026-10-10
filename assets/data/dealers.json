@@ -1,4 +1,11 @@
 {
-  "districts": ["Tirupati", "Kurnool", "Kadapa", "Warangal"],
-  "dealers": []
+  "districts": ["Karminagar", "Tirupati", "Kadapa", "Kurnool", "Warangal"],
+  "dealers": [
+    {
+      "district": "Karminagar",
+      "name": "Sai Electricals",
+      "phone": "9000933113",
+      "address": "High Sir"
+    }
+  ]
 }

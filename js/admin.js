@@ -5,10 +5,9 @@
 (function () {
   "use strict";
 
-  const WORKER_URL_KEY = "kvp-admin-worker-url";
+  const WORKER_URL = "https://kvp-dealer-admin.jillavaishnavi.workers.dev";
   const PASSWORD_KEY = "kvp-admin-worker-password";
 
-  const workerUrlInput = document.getElementById("fWorkerUrl");
   const passwordInput = document.getElementById("fPassword");
   const saveTokenBtn = document.getElementById("saveTokenBtn");
   const clearTokenBtn = document.getElementById("clearTokenBtn");
@@ -61,14 +60,11 @@
     setStatus(saveStatus, "", "");
   });
 
-  function getCreds() {
+  function getPassword() {
     try {
-      return {
-        workerUrl: localStorage.getItem(WORKER_URL_KEY) || "",
-        password: localStorage.getItem(PASSWORD_KEY) || "",
-      };
+      return localStorage.getItem(PASSWORD_KEY) || "";
     } catch (e) {
-      return { workerUrl: "", password: "" };
+      return "";
     }
   }
 
@@ -84,11 +80,11 @@
   }
 
   async function callWorker(action, extra) {
-    const { workerUrl, password } = getCreds();
-    if (!workerUrl || !password) {
-      throw new Error("Connect with your Worker URL and password first (top of page).");
+    const password = getPassword();
+    if (!password) {
+      throw new Error("Connect with your password first (top of page).");
     }
-    const res = await fetch(workerUrl, {
+    const res = await fetch(WORKER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(Object.assign({ password: password, action: action }, extra || {})),
@@ -150,9 +146,9 @@
   }
 
   async function loadFromWorker() {
-    const { workerUrl, password } = getCreds();
-    if (!workerUrl || !password) {
-      setStatus(connectionStatus, "Not connected. Enter your Worker URL and password above.", "neutral");
+    const password = getPassword();
+    if (!password) {
+      setStatus(connectionStatus, "Not connected. Enter your password above.", "neutral");
       return;
     }
     setStatus(connectionStatus, "Loading dealers...", "neutral");
@@ -178,11 +174,9 @@
   }
 
   saveTokenBtn.addEventListener("click", function () {
-    const url = workerUrlInput.value.trim().replace(/\/$/, "");
     const pwd = passwordInput.value;
-    if (!url || !pwd) return;
+    if (!pwd) return;
     try {
-      localStorage.setItem(WORKER_URL_KEY, url);
       localStorage.setItem(PASSWORD_KEY, pwd);
     } catch (e) {
       // ignore
@@ -193,7 +187,6 @@
 
   clearTokenBtn.addEventListener("click", function () {
     try {
-      localStorage.removeItem(WORKER_URL_KEY);
       localStorage.removeItem(PASSWORD_KEY);
     } catch (e) {
       // ignore

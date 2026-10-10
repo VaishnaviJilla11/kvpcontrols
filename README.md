@@ -55,13 +55,14 @@ so the real GitHub token is never exposed in the browser — only a short passwo
      and write" on the `kvpcontrols` repo.
    - `ADMIN_PASSWORD` — a short password you choose for the admin page.
 4. Copy the Worker's URL (shown at the top of its dashboard page), e.g.
-   `https://kvp-dealer-admin.<you>.workers.dev`.
+   `https://kvp-dealer-admin.<you>.workers.dev`, and paste it as the `WORKER_URL` constant
+   near the top of [`js/admin.js`](js/admin.js). It only needs to be set once.
 
 **Using the admin page** (after the one-time setup above):
 1. Open `admin.html` in a browser (keep the URL private — it isn't linked from the public
    site, but isn't itself password-protected; the Worker is what enforces the password).
-2. Paste the Worker URL and your chosen password, click **Connect** — both are saved only
-   in that browser's local storage.
+2. Enter your chosen password, click **Connect** — it's saved only in that browser's
+   local storage, so you only need to type it once per device.
 3. Fill in District, Dealer Name, Phone, and Address, then click **Save Dealer to
    Website**. S.No is generated automatically from row position.
 4. The live site updates automatically once GitHub Pages rebuilds (usually 30-60 seconds).
@@ -69,8 +70,8 @@ so the real GitHub token is never exposed in the browser — only a short passwo
 To add a new **district**, use the "Manage Districts" box on the admin page — no code
 editing needed.
 
-Since the Worker URL and password live only in your browser's local storage, click
-**Clear** before sharing or recycling the device.
+Since the password lives only in your browser's local storage, click **Clear** before
+sharing or recycling the device.
 
 ## Updating product info / pricing
 

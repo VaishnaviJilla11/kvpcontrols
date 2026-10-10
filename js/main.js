@@ -80,12 +80,6 @@
     });
   });
 
-  const productsCount = document.getElementById("productsCount");
-  if (productsCount && productGrid) {
-    const total = productGrid.querySelectorAll(".product-card").length;
-    productsCount.textContent = total + (total === 1 ? " product" : " products");
-  }
-
   /* ---------------- Scrollspy for active nav link ---------------- */
   const sections = document.querySelectorAll("main section[id]");
   const navAnchors = document.querySelectorAll(".nav-links a[href^='#']");

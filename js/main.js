@@ -105,6 +105,7 @@
   /* ---------------- Dealer directory ---------------- */
   const dealerResults = document.getElementById("dealerResults");
   const dealerDistrict = document.getElementById("dealerDistrict");
+  const dealerSearch = document.getElementById("dealerSearch");
   const dealers = typeof KVP_DEALERS !== "undefined" ? KVP_DEALERS : [];
   const districts = typeof KVP_DISTRICTS !== "undefined" ? KVP_DISTRICTS : [];
 
@@ -130,17 +131,16 @@
     return (
       '<div class="dealer-empty">' +
       '<div class="icon">🗺️</div>' +
-      "<h4>Select a district above</h4>" +
-      "<p>Choose a district from the dropdown to view KVP dealers serving that area.</p>" +
+      "<h4>Select a district or search by name</h4>" +
+      "<p>Choose a district from the dropdown, or type a dealer name to search, to view KVP dealers.</p>" +
       "</div>"
     );
   }
 
-  function dealerTableHtml(district, districtDealers) {
+  function dealerTableHtml(districtDealers, emptyMessage) {
     const rows = districtDealers.length
       ? districtDealers.map(dealerRowHtml).join("")
-      : '<tr class="dealer-empty-row"><td colspan="4">No dealers listed yet for ' + escapeHtml(district) +
-        '. Call <a class="phone" href="tel:+919951773344">+91 99517 73344</a> and we\'ll connect you to the nearest one.</td></tr>';
+      : '<tr class="dealer-empty-row"><td colspan="4">' + emptyMessage + "</td></tr>";
 
     return (
       '<div class="dealer-table-wrap">' +
@@ -166,23 +166,37 @@
     if (!dealerResults) return;
 
     const selectedDistrict = (dealerDistrict && dealerDistrict.value) || "";
+    const query = ((dealerSearch && dealerSearch.value) || "").trim().toLowerCase();
 
-    if (!selectedDistrict) {
+    if (!selectedDistrict && !query) {
       dealerResults.innerHTML = promptStateHtml();
       return;
     }
 
-    const districtDealers = dealers.filter(function (dealer) {
-      return dealer.district === selectedDistrict;
+    const filtered = dealers.filter(function (dealer) {
+      const matchesDistrict = !selectedDistrict || dealer.district === selectedDistrict;
+      const matchesQuery = !query || String(dealer.name || "").toLowerCase().includes(query);
+      return matchesDistrict && matchesQuery;
     });
 
-    dealerResults.innerHTML = dealerTableHtml(selectedDistrict, districtDealers);
+    let emptyMessage;
+    if (query && selectedDistrict) {
+      emptyMessage = "No dealers named \u201c" + escapeHtml(dealerSearch.value.trim()) + "\u201d found in " + escapeHtml(selectedDistrict) + ".";
+    } else if (query) {
+      emptyMessage = "No dealers found matching \u201c" + escapeHtml(dealerSearch.value.trim()) + "\u201d.";
+    } else {
+      emptyMessage = "No dealers listed yet for " + escapeHtml(selectedDistrict) + ".";
+    }
+    emptyMessage += ' Call <a class="phone" href="tel:+919951773344">+91 99517 73344</a> and we\'ll connect you to the nearest one.';
+
+    dealerResults.innerHTML = dealerTableHtml(filtered, emptyMessage);
   }
 
   if (dealerResults) {
     populateDistrictFilter();
     renderDealers();
     if (dealerDistrict) dealerDistrict.addEventListener("change", renderDealers);
+    if (dealerSearch) dealerSearch.addEventListener("input", renderDealers);
   }
 
   /* ---------------- Footer year ---------------- */

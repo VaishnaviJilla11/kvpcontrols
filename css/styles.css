@@ -149,6 +149,17 @@ section {
   background: var(--orange-dark);
 }
 
+.btn-blue {
+  background: var(--navy-light);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(19, 57, 94, 0.45);
+}
+
+.btn-blue:hover {
+  background: #1d4a79;
+}
+
 /* ---------- Header ---------- */
 .site-header {
   position: sticky;

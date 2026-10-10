@@ -4,5 +4,12 @@
     "Tirupati",
     "Kadapa"
   ],
-  "dealers": []
+  "dealers": [
+    {
+      "district": "Karminagar",
+      "name": "Sai Electricals",
+      "phone": "9000933113",
+      "address": "High Sir"
+    }
+  ]
 }

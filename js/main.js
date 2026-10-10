@@ -106,8 +106,8 @@
   const dealerResults = document.getElementById("dealerResults");
   const dealerDistrict = document.getElementById("dealerDistrict");
   const dealerSearch = document.getElementById("dealerSearch");
-  const dealers = typeof KVP_DEALERS !== "undefined" ? KVP_DEALERS : [];
-  const districts = typeof KVP_DISTRICTS !== "undefined" ? KVP_DISTRICTS : [];
+  let dealers = [];
+  let districts = [];
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, function (char) {
@@ -193,10 +193,20 @@
   }
 
   if (dealerResults) {
-    populateDistrictFilter();
-    renderDealers();
-    if (dealerDistrict) dealerDistrict.addEventListener("change", renderDealers);
-    if (dealerSearch) dealerSearch.addEventListener("input", renderDealers);
+    dealerResults.innerHTML = '<div class="dealer-empty"><div class="icon">\u23f3</div><h4>Loading dealers...</h4></div>';
+    fetch("assets/data/dealers.json", { cache: "no-store" })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        dealers = data.dealers || [];
+        districts = data.districts || [];
+        populateDistrictFilter();
+        renderDealers();
+        if (dealerDistrict) dealerDistrict.addEventListener("change", renderDealers);
+        if (dealerSearch) dealerSearch.addEventListener("input", renderDealers);
+      })
+      .catch(function () {
+        dealerResults.innerHTML = '<div class="dealer-empty"><div class="icon">\u26a0\ufe0f</div><h4>Couldn\u2019t load dealer data</h4><p>Please refresh the page or try again shortly.</p></div>';
+      });
   }
 
   /* ---------------- Footer year ---------------- */

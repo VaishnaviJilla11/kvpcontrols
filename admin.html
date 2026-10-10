@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>KVP Dealer Admin | Internal Use Only</title>
+<link rel="icon" href="assets/images/kvp-logo.jpeg" />
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-body">
+
+<header class="admin-header">
+  <img src="assets/images/kvp-logo.jpeg" alt="KVP logo" />
+  <div>
+    <h1>Dealer Network &mdash; Admin</h1>
+    <p>Internal tool. Not linked from the public site. Changes save directly to the live site via GitHub.</p>
+  </div>
+</header>
+
+<main class="admin-main">
+
+  <section class="admin-card" id="connectionCard">
+    <h2>GitHub Connection</h2>
+    <p class="admin-hint">
+      Paste a GitHub Personal Access Token here once &mdash; it is saved only in this browser
+      (never in the website code). Create one with <strong>only</strong> the "Contents: Read and write"
+      permission for the <code>kvpcontrols</code> repo at
+      <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">github.com/settings/tokens</a>.
+    </p>
+    <div class="admin-form admin-form-inline">
+      <label class="admin-form-grow">
+        Personal Access Token
+        <input type="password" id="fToken" placeholder="github_pat_..." autocomplete="off" />
+      </label>
+      <button type="button" id="saveTokenBtn" class="btn btn-navy">Save Token</button>
+      <button type="button" id="clearTokenBtn" class="btn-text-danger">Clear</button>
+    </div>
+    <p id="connectionStatus" class="admin-status"></p>
+  </section>
+
+  <section class="admin-card">
+    <h2>Add a Dealer</h2>
+    <form id="dealerForm" class="admin-form">
+      <label>
+        District
+        <select id="fDistrict" required>
+          <option value="" disabled selected>Select a district...</option>
+        </select>
+      </label>
+      <label>
+        Dealer / Firm Name
+        <input type="text" id="fName" placeholder="e.g. Sai Electricals" required />
+      </label>
+      <label>
+        Phone Number
+        <input type="tel" id="fPhone" placeholder="e.g. 9000933113" pattern="[0-9]{10}" title="10-digit phone number" required />
+      </label>
+      <label>
+        Address
+        <textarea id="fAddress" rows="2" placeholder="Street, area, pincode" required></textarea>
+      </label>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Save Dealer to Website</button>
+    </form>
+    <p id="saveStatus" class="admin-status"></p>
+  </section>
+
+  <section class="admin-card">
+    <div class="admin-card-head">
+      <h2>Current Live Dealers</h2>
+      <button type="button" id="refreshBtn" class="btn-text-danger">Refresh</button>
+    </div>
+    <div class="dealer-table-wrap">
+      <table class="dealer-table">
+        <thead><tr><th>S.No</th><th>District</th><th>Dealer Name</th><th>Phone</th><th>Address</th><th></th></tr></thead>
+        <tbody id="adminDealerRows">
+          <tr class="dealer-empty-row"><td colspan="6">Connect with a token above to load dealers.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

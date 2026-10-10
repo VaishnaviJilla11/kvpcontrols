@@ -1,0 +1,176 @@
+/* Admin page — internal dealer data-entry tool. Reuses variables/tokens from styles.css. */
+
+.admin-body {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--navy);
+  color: var(--white);
+  padding: 20px 32px;
+}
+
+.admin-header img {
+  height: 56px;
+  width: 56px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.admin-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.3rem;
+}
+
+.admin-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+}
+
+.admin-header code {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.admin-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: grid;
+  gap: 24px;
+}
+
+.admin-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.admin-card h2 {
+  margin: 0 0 16px;
+  color: var(--navy);
+  font-size: 1.15rem;
+}
+
+.admin-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.admin-card-head h2 {
+  margin: 0;
+}
+
+.admin-form {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--navy);
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+  outline: 2px solid var(--orange);
+}
+
+.admin-form button {
+  justify-self: start;
+}
+
+.admin-form-inline {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-form-inline .admin-form-grow {
+  flex: 1;
+  min-width: 220px;
+}
+
+.admin-status {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.admin-status-success {
+  color: #1a7f37;
+}
+
+.admin-status-error {
+  color: var(--red);
+}
+
+.admin-status-neutral {
+  color: var(--text-muted);
+}
+
+.admin-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 12px;
+}
+
+.admin-hint code {
+  background: var(--bg-alt);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.admin-code {
+  width: 100%;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 0.85rem;
+  background: var(--navy-dark);
+  color: #c3e88d;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  resize: vertical;
+}
+
+.btn-text-danger {
+  background: none;
+  border: none;
+  color: var(--red);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-text-danger:hover {
+  text-decoration: underline;
+}

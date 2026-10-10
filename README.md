@@ -9,10 +9,13 @@ dealer directory.
 ```
 website/
 ├── index.html          # Single-page site (Home, About, Features, Products, Dealer Network, Contact)
+├── admin.html           # Internal-only dealer management tool (not linked from the public site)
 ├── css/styles.css       # All styling (brand colors, layout, responsive rules)
-├── js/main.js            # Mobile nav, scrollspy, product view toggle, dealer district rendering
-├── js/dealers.js         # Dealer directory data — edit this to add/remove dealers
+├── css/admin.css        # Admin page styling
+├── js/main.js            # Mobile nav, scrollspy, product view toggle, dealer rendering
+├── js/admin.js           # Admin page logic — saves dealers straight to GitHub
 └── assets/
+    ├── data/dealers.json                # Dealer directory data (districts + dealers) — live source of truth
     ├── images/pdf-page*.png            # Real product photos extracted from the corporate pamphlet
     ├── KVP_Corporate_Pamphlet.pdf       # Downloadable 6-page product pamphlet
     └── KVP_Motor_Starters_Brochure.pdf  # Downloadable motor starter spec sheet
@@ -35,27 +38,29 @@ stay crisp at any size. A fixed Call + WhatsApp button (bottom-right) links dire
 | Orange      | `#f5821f` | Highlights (matches panel housings) |
 | Light grey  | `#f5f7fa` | Section backgrounds                 |
 
-## Adding dealers
+## Adding dealers (dynamic — no code editing needed)
 
-Open [`js/dealers.js`](js/dealers.js). There are two things to edit:
+The public site reads dealers from [`assets/data/dealers.json`](assets/data/dealers.json)
+at runtime. [`admin.html`](admin.html) is a private tool that edits this file directly on
+GitHub, so new dealers go live automatically (no manual git commands):
 
-1. **`KVP_DISTRICTS`** — the list of districts shown in the dropdown. Add new district
-   names here as the network grows.
-2. **`KVP_DEALERS`** — one object per dealer:
+1. Open `admin.html` in a browser (keep the URL private — it isn't linked from the public
+   site, but isn't password-protected either).
+2. **One-time setup:** create a GitHub Personal Access Token at
+   [github.com/settings/tokens](https://github.com/settings/tokens?type=beta) scoped to
+   **only** "Contents: Read and write" on the `kvpcontrols` repo. Paste it into the
+   "Personal Access Token" field and click **Save Token** — it's stored only in that
+   browser's local storage, never in the site's code.
+3. Fill in District, Dealer Name, Phone, and Address, then click **Save Dealer to
+   Website**. S.No is generated automatically from row position.
+4. The change commits straight to `dealers.json` on GitHub. The live site updates
+   automatically once GitHub Pages rebuilds (usually 30-60 seconds).
 
-```js
-{
-  district: "Kadapa",   // must match a name in KVP_DISTRICTS exactly
-  name: "Dealer / Firm Name",
-  phone: "9000933113",
-  address: "Street, area, pincode",
-}
-```
+To add a new **district** to the dropdown, edit the `districts` array in
+`assets/data/dealers.json` directly (via admin.html's Refresh/GitHub, or a normal commit).
 
-Save the file and reload the page — the **Dealer Network** tab groups dealers by the
-selected district automatically in a table (S.No, Dealer Name, Phone, Address). Until
-dealers are added for a district, the table shows a "no dealers listed yet" row with a
-call-to-action phone number.
+Since the token lives only in your browser's local storage, use **Clear** before sharing
+or recycling the device, and set a reasonable token expiration when creating it.
 
 ## Updating product info / pricing
 

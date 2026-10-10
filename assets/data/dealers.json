@@ -25,6 +25,12 @@
       "name": "Ganesh engg electricals",
       "phone": "5188767998",
       "address": "Gannu"
+    },
+    {
+      "district": "Hyderabad",
+      "name": "Vasavi Polymers",
+      "phone": "9849079474",
+      "address": "PLOT NO 10, MIE Rd, Indra Reddy Allwyn Colony, Hafeezpet, Hyderabad, Telangana 500049"
     }
   ]
 }

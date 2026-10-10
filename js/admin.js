@@ -1,16 +1,15 @@
-// KVP Dealer Admin: saves dealer entries directly to GitHub via the Contents API,
+// KVP Dealer Admin: saves dealer entries via a private Cloudflare Worker relay,
 // so the live site (which fetches assets/data/dealers.json) updates automatically
-// after GitHub Pages rebuilds (usually within ~30-60 seconds).
+// after GitHub Pages rebuilds (usually within ~30-60 seconds). The real GitHub
+// token lives only in the Worker's encrypted environment — never in this file.
 (function () {
   "use strict";
 
-  const GH_OWNER = "VaishnaviJilla11";
-  const GH_REPO = "kvpcontrols";
-  const GH_BRANCH = "main";
-  const GH_PATH = "assets/data/dealers.json";
-  const TOKEN_KEY = "kvp-admin-gh-token";
+  const WORKER_URL_KEY = "kvp-admin-worker-url";
+  const PASSWORD_KEY = "kvp-admin-worker-password";
 
-  const tokenInput = document.getElementById("fToken");
+  const workerUrlInput = document.getElementById("fWorkerUrl");
+  const passwordInput = document.getElementById("fPassword");
   const saveTokenBtn = document.getElementById("saveTokenBtn");
   const clearTokenBtn = document.getElementById("clearTokenBtn");
   const connectionStatus = document.getElementById("connectionStatus");
@@ -28,18 +27,20 @@
   const districtChips = document.getElementById("districtChips");
   const districtStatus = document.getElementById("districtStatus");
 
-  let currentSha = null;
   let currentData = { districts: [], dealers: [] };
 
   phoneInput.addEventListener("input", function () {
     phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
   });
 
-  function getToken() {
+  function getCreds() {
     try {
-      return localStorage.getItem(TOKEN_KEY) || "";
+      return {
+        workerUrl: localStorage.getItem(WORKER_URL_KEY) || "",
+        password: localStorage.getItem(PASSWORD_KEY) || "",
+      };
     } catch (e) {
-      return "";
+      return { workerUrl: "", password: "" };
     }
   }
 
@@ -54,16 +55,23 @@
     });
   }
 
-  function apiUrl() {
-    return "https://api.github.com/repos/" + GH_OWNER + "/" + GH_REPO + "/contents/" + GH_PATH;
-  }
-
-  function b64EncodeUtf8(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-  }
-
-  function b64DecodeUtf8(b64) {
-    return decodeURIComponent(escape(atob(b64)));
+  async function callWorker(action, extra) {
+    const { workerUrl, password } = getCreds();
+    if (!workerUrl || !password) {
+      throw new Error("Connect with your Worker URL and password first (top of page).");
+    }
+    const res = await fetch(workerUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({ password: password, action: action }, extra || {})),
+    });
+    const body = await res.json().catch(function () {
+      return {};
+    });
+    if (!res.ok || !body.ok) {
+      throw new Error(body.error || "Worker returned " + res.status);
+    }
+    return body;
   }
 
   function renderDistricts() {
@@ -110,56 +118,27 @@
       .join("");
   }
 
-  async function loadFromGitHub() {
-    const token = getToken();
-    if (!token) {
-      setStatus(connectionStatus, "Not connected. Paste a token above and click Save Token.", "neutral");
+  async function loadFromWorker() {
+    const { workerUrl, password } = getCreds();
+    if (!workerUrl || !password) {
+      setStatus(connectionStatus, "Not connected. Enter your Worker URL and password above.", "neutral");
       return;
     }
-    setStatus(connectionStatus, "Loading dealers from GitHub...", "neutral");
+    setStatus(connectionStatus, "Loading dealers...", "neutral");
     try {
-      const res = await fetch(apiUrl() + "?ref=" + GH_BRANCH, {
-        headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" },
-      });
-      if (!res.ok) throw new Error(res.status === 401 ? "Invalid token." : "GitHub returned " + res.status);
-      const json = await res.json();
-      currentSha = json.sha;
-      currentData = JSON.parse(b64DecodeUtf8(json.content.replace(/\n/g, "")));
+      const body = await callWorker("load");
+      currentData = body.data || { districts: [], dealers: [] };
       renderDistricts();
       renderTable();
-      setStatus(connectionStatus, "Connected. Loaded " + (currentData.dealers || []).length + " dealer(s) from GitHub.", "success");
+      setStatus(connectionStatus, "Connected. Loaded " + (currentData.dealers || []).length + " dealer(s).", "success");
     } catch (err) {
       setStatus(connectionStatus, "Could not connect: " + err.message, "error");
     }
   }
 
-  async function saveToGitHub(commitMessage) {
-    const token = getToken();
-    if (!token) {
-      setStatus(saveStatus, "Connect with a GitHub token first (top of page).", "error");
-      return false;
-    }
+  async function saveToWorker(commitMessage) {
     try {
-      const res = await fetch(apiUrl(), {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer " + token,
-          Accept: "application/vnd.github+json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: commitMessage,
-          content: b64EncodeUtf8(JSON.stringify(currentData, null, 2)),
-          sha: currentSha,
-          branch: GH_BRANCH,
-        }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(function () { return {}; });
-        throw new Error(body.message || "GitHub returned " + res.status);
-      }
-      const json = await res.json();
-      currentSha = json.content.sha;
+      await callWorker("save", { data: currentData, message: commitMessage });
       return true;
     } catch (err) {
       setStatus(saveStatus, "Save failed: " + err.message, "error");
@@ -168,31 +147,33 @@
   }
 
   saveTokenBtn.addEventListener("click", function () {
-    const value = tokenInput.value.trim();
-    if (!value) return;
+    const url = workerUrlInput.value.trim().replace(/\/$/, "");
+    const pwd = passwordInput.value;
+    if (!url || !pwd) return;
     try {
-      localStorage.setItem(TOKEN_KEY, value);
+      localStorage.setItem(WORKER_URL_KEY, url);
+      localStorage.setItem(PASSWORD_KEY, pwd);
     } catch (e) {
       // ignore
     }
-    tokenInput.value = "";
-    loadFromGitHub();
+    passwordInput.value = "";
+    loadFromWorker();
   });
 
   clearTokenBtn.addEventListener("click", function () {
     try {
-      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(WORKER_URL_KEY);
+      localStorage.removeItem(PASSWORD_KEY);
     } catch (e) {
       // ignore
     }
-    currentSha = null;
     currentData = { districts: [], dealers: [] };
     renderDistricts();
     renderTable();
-    setStatus(connectionStatus, "Token cleared.", "neutral");
+    setStatus(connectionStatus, "Disconnected.", "neutral");
   });
 
-  refreshBtn.addEventListener("click", loadFromGitHub);
+  refreshBtn.addEventListener("click", loadFromWorker);
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -207,7 +188,7 @@
     };
     currentData.dealers = (currentData.dealers || []).concat([dealer]);
 
-    const ok = await saveToGitHub("Add dealer: " + dealer.name + " (" + dealer.district + ")");
+    const ok = await saveToWorker("Add dealer: " + dealer.name + " (" + dealer.district + ")");
     submitBtn.disabled = false;
     if (ok) {
       renderTable();
@@ -230,7 +211,7 @@
     currentData.dealers.splice(index, 1);
     btn.closest("tr").style.opacity = "0.5";
 
-    const ok = await saveToGitHub("Remove dealer: " + removed.name);
+    const ok = await saveToWorker("Remove dealer: " + removed.name);
     if (ok) {
       renderTable();
       setStatus(saveStatus, "Removed. The live site will update within about a minute.", "success");
@@ -255,7 +236,7 @@
     setStatus(districtStatus, "Saving...", "neutral");
     currentData.districts = districts.concat([name]);
 
-    const ok = await saveToGitHub("Add district: " + name);
+    const ok = await saveToWorker("Add district: " + name);
     addDistrictBtn.disabled = false;
     if (ok) {
       renderDistricts();
@@ -280,7 +261,7 @@
     currentData.districts.splice(index, 1);
     btn.closest(".district-chip").style.opacity = "0.5";
 
-    const ok = await saveToGitHub("Remove district: " + district);
+    const ok = await saveToWorker("Remove district: " + district);
     if (ok) {
       renderDistricts();
       setStatus(districtStatus, "Removed.", "success");
@@ -290,6 +271,6 @@
     }
   });
 
-  loadFromGitHub();
+  loadFromWorker();
 })();
 

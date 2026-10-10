@@ -41,26 +41,36 @@ stay crisp at any size. A fixed Call + WhatsApp button (bottom-right) links dire
 ## Adding dealers (dynamic — no code editing needed)
 
 The public site reads dealers from [`assets/data/dealers.json`](assets/data/dealers.json)
-at runtime. [`admin.html`](admin.html) is a private tool that edits this file directly on
-GitHub, so new dealers go live automatically (no manual git commands):
+at runtime. [`admin.html`](admin.html) is a private tool that saves to this file through a
+small **Cloudflare Worker** relay (see [`cloudflare-worker/worker.js`](cloudflare-worker/worker.js)),
+so the real GitHub token is never exposed in the browser — only a short password you choose.
 
+**One-time Worker setup** (free, no credit card):
+1. Sign in at [workers.cloudflare.com](https://workers.cloudflare.com) → Workers & Pages →
+   Create → Create Worker. Name it anything (e.g. `kvp-dealer-admin`) → Deploy.
+2. Click **Edit code**, replace the placeholder with the full contents of
+   `cloudflare-worker/worker.js`, Save & Deploy.
+3. Go to **Settings → Variables and Secrets** → add two encrypted secrets:
+   - `GITHUB_TOKEN` — a GitHub Personal Access Token scoped to **only** "Contents: Read
+     and write" on the `kvpcontrols` repo.
+   - `ADMIN_PASSWORD` — a short password you choose for the admin page.
+4. Copy the Worker's URL (shown at the top of its dashboard page), e.g.
+   `https://kvp-dealer-admin.<you>.workers.dev`.
+
+**Using the admin page** (after the one-time setup above):
 1. Open `admin.html` in a browser (keep the URL private — it isn't linked from the public
-   site, but isn't password-protected either).
-2. **One-time setup:** create a GitHub Personal Access Token at
-   [github.com/settings/tokens](https://github.com/settings/tokens?type=beta) scoped to
-   **only** "Contents: Read and write" on the `kvpcontrols` repo. Paste it into the
-   "Personal Access Token" field and click **Save Token** — it's stored only in that
-   browser's local storage, never in the site's code.
+   site, but isn't itself password-protected; the Worker is what enforces the password).
+2. Paste the Worker URL and your chosen password, click **Connect** — both are saved only
+   in that browser's local storage.
 3. Fill in District, Dealer Name, Phone, and Address, then click **Save Dealer to
    Website**. S.No is generated automatically from row position.
-4. The change commits straight to `dealers.json` on GitHub. The live site updates
-   automatically once GitHub Pages rebuilds (usually 30-60 seconds).
+4. The live site updates automatically once GitHub Pages rebuilds (usually 30-60 seconds).
 
-To add a new **district** to the dropdown, edit the `districts` array in
-`assets/data/dealers.json` directly (via admin.html's Refresh/GitHub, or a normal commit).
+To add a new **district**, use the "Manage Districts" box on the admin page — no code
+editing needed.
 
-Since the token lives only in your browser's local storage, use **Clear** before sharing
-or recycling the device, and set a reasonable token expiration when creating it.
+Since the Worker URL and password live only in your browser's local storage, click
+**Clear** before sharing or recycling the device.
 
 ## Updating product info / pricing
 

@@ -24,17 +24,20 @@
   <section class="admin-card" id="connectionCard">
     <h2>GitHub Connection</h2>
     <p class="admin-hint">
-      Paste a GitHub Personal Access Token here once &mdash; it is saved only in this browser
-      (never in the website code). Create one with <strong>only</strong> the "Contents: Read and write"
-      permission for the <code>kvpcontrols</code> repo at
-      <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">github.com/settings/tokens</a>.
+      Enter your Worker URL (one-time, from your Cloudflare dashboard) and the admin password you
+      chose. Both are saved only in this browser &mdash; the real GitHub token stays private inside
+      Cloudflare and is never visible here.
     </p>
     <div class="admin-form admin-form-inline">
       <label class="admin-form-grow">
-        Personal Access Token
-        <input type="password" id="fToken" placeholder="github_pat_..." autocomplete="off" />
+        Worker URL
+        <input type="text" id="fWorkerUrl" placeholder="https://kvp-dealer-admin.your-name.workers.dev" autocomplete="off" />
       </label>
-      <button type="button" id="saveTokenBtn" class="btn btn-navy">Save Token</button>
+      <label class="admin-form-grow">
+        Admin Password
+        <input type="password" id="fPassword" placeholder="Your chosen password" autocomplete="off" />
+      </label>
+      <button type="button" id="saveTokenBtn" class="btn btn-navy">Connect</button>
       <button type="button" id="clearTokenBtn" class="btn-text-danger">Clear</button>
     </div>
     <p id="connectionStatus" class="admin-status"></p>
@@ -89,7 +92,7 @@
       <table class="dealer-table">
         <thead><tr><th>S.No</th><th>District</th><th>Dealer Name</th><th>Phone</th><th>Address</th><th></th></tr></thead>
         <tbody id="adminDealerRows">
-          <tr class="dealer-empty-row"><td colspan="6">Connect with a token above to load dealers.</td></tr>
+          <tr class="dealer-empty-row"><td colspan="6">Connect above to load dealers.</td></tr>
         </tbody>
       </table>
     </div>

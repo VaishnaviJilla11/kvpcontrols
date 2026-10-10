@@ -23,6 +23,10 @@
   const saveStatus = document.getElementById("saveStatus");
   const rowsBody = document.getElementById("adminDealerRows");
   const refreshBtn = document.getElementById("refreshBtn");
+  const newDistrictInput = document.getElementById("fNewDistrict");
+  const addDistrictBtn = document.getElementById("addDistrictBtn");
+  const districtChips = document.getElementById("districtChips");
+  const districtStatus = document.getElementById("districtStatus");
 
   let currentSha = null;
   let currentData = { districts: [], dealers: [] };
@@ -66,6 +70,18 @@
       option.textContent = district;
       districtSelect.appendChild(option);
     });
+
+    const districts = currentData.districts || [];
+    districtChips.innerHTML = districts.length
+      ? districts
+          .map(function (district, index) {
+            return (
+              '<span class="district-chip">' + escapeHtml(district) +
+              '<button type="button" data-remove-district="' + index + '" aria-label="Remove ' + escapeHtml(district) + '">&times;</button></span>'
+            );
+          })
+          .join("")
+      : '<span class="district-chips-empty">No districts yet — add one above.</span>';
   }
 
   function renderTable() {
@@ -217,6 +233,56 @@
     } else {
       currentData.dealers = backup;
       renderTable();
+    }
+  });
+
+  addDistrictBtn.addEventListener("click", async function () {
+    const name = newDistrictInput.value.trim();
+    if (!name) return;
+
+    const districts = currentData.districts || [];
+    const exists = districts.some(function (d) { return d.toLowerCase() === name.toLowerCase(); });
+    if (exists) {
+      setStatus(districtStatus, '"' + name + '" is already in the list.', "error");
+      return;
+    }
+
+    addDistrictBtn.disabled = true;
+    setStatus(districtStatus, "Saving...", "neutral");
+    currentData.districts = districts.concat([name]);
+
+    const ok = await saveToGitHub("Add district: " + name);
+    addDistrictBtn.disabled = false;
+    if (ok) {
+      renderDistricts();
+      newDistrictInput.value = "";
+      setStatus(districtStatus, "Saved! The dropdown will update on the live site within about a minute.", "success");
+    } else {
+      currentData.districts = districts;
+      setStatus(districtStatus, "Save failed. Please try again.", "error");
+    }
+  });
+
+  districtChips.addEventListener("click", async function (event) {
+    const btn = event.target.closest("[data-remove-district]");
+    if (!btn) return;
+    const index = Number(btn.dataset.removeDistrict);
+    const district = currentData.districts[index];
+    const inUse = (currentData.dealers || []).some(function (d) { return d.district === district; });
+    if (inUse && !confirm('"' + district + '" has dealers assigned to it. Remove it from the district list anyway?')) return;
+    if (!inUse && !confirm('Remove district "' + district + '"?')) return;
+
+    const backup = currentData.districts.slice();
+    currentData.districts.splice(index, 1);
+    btn.closest(".district-chip").style.opacity = "0.5";
+
+    const ok = await saveToGitHub("Remove district: " + district);
+    if (ok) {
+      renderDistricts();
+      setStatus(districtStatus, "Removed.", "success");
+    } else {
+      currentData.districts = backup;
+      renderDistricts();
     }
   });
 

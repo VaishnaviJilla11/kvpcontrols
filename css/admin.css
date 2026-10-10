@@ -174,3 +174,42 @@
 .btn-text-danger:hover {
   text-decoration: underline;
 }
+
+.district-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.district-chips-empty {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.district-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-alt);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 6px 8px 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.district-chip button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.district-chip button:hover {
+  color: var(--red);
+}

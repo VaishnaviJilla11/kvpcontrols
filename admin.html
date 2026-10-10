@@ -41,6 +41,20 @@
   </section>
 
   <section class="admin-card">
+    <h2>Manage Districts</h2>
+    <p class="admin-hint">Districts added here appear immediately in the dropdown below, and on the public site's Dealer Network dropdown once the save finishes.</p>
+    <div class="admin-form admin-form-inline">
+      <label class="admin-form-grow">
+        New District Name
+        <input type="text" id="fNewDistrict" placeholder="e.g. Nellore" />
+      </label>
+      <button type="button" id="addDistrictBtn" class="btn btn-navy">Add District</button>
+    </div>
+    <div id="districtChips" class="district-chips"></div>
+    <p id="districtStatus" class="admin-status"></p>
+  </section>
+
+  <section class="admin-card">
     <h2>Add a Dealer</h2>
     <form id="dealerForm" class="admin-form">
       <label>

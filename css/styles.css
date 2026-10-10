@@ -187,8 +187,8 @@ section {
 }
 
 .brand img {
-  height: 64px;
-  width: 64px;
+  height: 84px;
+  width: 84px;
   object-fit: contain;
   border-radius: 8px;
 }

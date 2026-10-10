@@ -1,24 +1,29 @@
 /**
  * KVP Dealer Network data.
  *
- * Add one object per dealer using the template below, then save the file —
- * the Dealers tab on the site picks this list up automatically.
+ * KVP_DISTRICTS: list of districts shown in the "Select a District" dropdown.
+ * Add more district names here as KVP's dealer network grows.
+ *
+ * KVP_DEALERS: one object per dealer. Add entries using the template below —
+ * the Dealer Network tab on the site picks them up automatically and groups
+ * them by district.
  *
  * {
+ *   district: "Kadapa",      // must match a name in KVP_DISTRICTS exactly
  *   name: "Dealer / Firm Name",
- *   city: "City",
- *   state: "Andhra Pradesh" | "Telangana" | "Karnataka" | ...,
+ *   phone: "9XXXXXXXXX",     // digits only, used for tel: links
  *   address: "Street, area, pincode",
- *   phone: "9XXXXXXXXX"   // digits only, used for tel: / wa.me links
  * }
  */
+const KVP_DISTRICTS = ["Tirupati", "Kurnool", "Kadapa", "Warangal"];
+
 const KVP_DEALERS = [
   // Example (remove the comment markers and fill in real details):
   // {
+  //   district: "Kadapa",
   //   name: "Sai Electricals",
-  //   city: "Secunderabad",
-  //   state: "Telangana",
-  //   address: "Tadbund, Secunderabad - 500009",
   //   phone: "9000933113",
+  //   address: "Main Road, Kadapa - 516001",
   // },
 ];
+

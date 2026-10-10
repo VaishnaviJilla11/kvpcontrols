@@ -103,10 +103,10 @@
   setActiveLink();
 
   /* ---------------- Dealer directory ---------------- */
-  const dealerGrid = document.getElementById("dealerGrid");
-  const dealerSearch = document.getElementById("dealerSearch");
-  const dealerState = document.getElementById("dealerState");
+  const dealerResults = document.getElementById("dealerResults");
+  const dealerDistrict = document.getElementById("dealerDistrict");
   const dealers = typeof KVP_DEALERS !== "undefined" ? KVP_DEALERS : [];
+  const districts = typeof KVP_DISTRICTS !== "undefined" ? KVP_DISTRICTS : [];
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, function (char) {
@@ -114,75 +114,75 @@
     });
   }
 
-  function dealerCardHtml(dealer) {
+  function dealerRowHtml(dealer, index) {
     const digits = String(dealer.phone || "").replace(/\D/g, "");
     return (
-      '<article class="dealer-card">' +
-      "<h4>" + escapeHtml(dealer.name) + "</h4>" +
-      '<div class="location">' + escapeHtml(dealer.city) + ", " + escapeHtml(dealer.state) + "</div>" +
-      '<div class="meta">' +
-      (dealer.address ? "<span>" + escapeHtml(dealer.address) + "</span>" : "") +
-      (digits ? '<a class="phone" href="tel:+91' + digits + '">+91 ' + escapeHtml(dealer.phone) + "</a>" : "") +
-      "</div>" +
-      "</article>"
+      "<tr>" +
+      "<td>" + (index + 1) + "</td>" +
+      "<td>" + escapeHtml(dealer.name) + "</td>" +
+      "<td>" + (digits ? '<a class="phone" href="tel:+91' + digits + '">+91 ' + escapeHtml(dealer.phone) + "</a>" : "&mdash;") + "</td>" +
+      "<td>" + escapeHtml(dealer.address || "") + "</td>" +
+      "</tr>"
     );
   }
 
-  function emptyStateHtml(hasFilters) {
+  function promptStateHtml() {
     return (
       '<div class="dealer-empty">' +
       '<div class="icon">🗺️</div>' +
-      "<h4>" + (hasFilters ? "No dealers match your search" : "Dealer list coming soon") + "</h4>" +
-      "<p>" +
-      (hasFilters
-        ? "Try a different city, state, or dealer name."
-        : "We're adding our authorized dealers across Andhra Pradesh, Telangana &amp; Karnataka. Call " +
-          '<a class="phone" href="tel:+919000933113">+91 90009 33113</a> and we\'ll connect you to the nearest one.')
-      + "</p>" +
+      "<h4>Select a district above</h4>" +
+      "<p>Choose a district from the dropdown to view KVP dealers serving that area.</p>" +
       "</div>"
     );
   }
 
-  function populateStateFilter() {
-    if (!dealerState) return;
-    const states = Array.from(new Set(dealers.map(function (d) { return d.state; }))).sort();
-    states.forEach(function (state) {
+  function dealerTableHtml(district, districtDealers) {
+    const rows = districtDealers.length
+      ? districtDealers.map(dealerRowHtml).join("")
+      : '<tr class="dealer-empty-row"><td colspan="4">No dealers listed yet for ' + escapeHtml(district) +
+        '. Call <a class="phone" href="tel:+919951773344">+91 99517 73344</a> and we\'ll connect you to the nearest one.</td></tr>';
+
+    return (
+      '<div class="dealer-table-wrap">' +
+      "<table class=\"dealer-table\">" +
+      "<thead><tr><th>S.No</th><th>Dealer Name</th><th>Phone Number</th><th>Address</th></tr></thead>" +
+      "<tbody>" + rows + "</tbody>" +
+      "</table>" +
+      "</div>"
+    );
+  }
+
+  function populateDistrictFilter() {
+    if (!dealerDistrict) return;
+    districts.forEach(function (district) {
       const option = document.createElement("option");
-      option.value = state;
-      option.textContent = state;
-      dealerState.appendChild(option);
+      option.value = district;
+      option.textContent = district;
+      dealerDistrict.appendChild(option);
     });
   }
 
   function renderDealers() {
-    if (!dealerGrid) return;
+    if (!dealerResults) return;
 
-    const query = (dealerSearch && dealerSearch.value || "").trim().toLowerCase();
-    const stateFilter = (dealerState && dealerState.value) || "";
+    const selectedDistrict = (dealerDistrict && dealerDistrict.value) || "";
 
-    const filtered = dealers.filter(function (dealer) {
-      const matchesQuery =
-        !query ||
-        [dealer.name, dealer.city, dealer.state].some(function (field) {
-          return String(field || "").toLowerCase().includes(query);
-        });
-      const matchesState = !stateFilter || dealer.state === stateFilter;
-      return matchesQuery && matchesState;
-    });
-
-    if (filtered.length === 0) {
-      dealerGrid.innerHTML = emptyStateHtml(dealers.length > 0);
+    if (!selectedDistrict) {
+      dealerResults.innerHTML = promptStateHtml();
       return;
     }
 
-    dealerGrid.innerHTML = filtered.map(dealerCardHtml).join("");
+    const districtDealers = dealers.filter(function (dealer) {
+      return dealer.district === selectedDistrict;
+    });
+
+    dealerResults.innerHTML = dealerTableHtml(selectedDistrict, districtDealers);
   }
 
-  if (dealerGrid) {
-    populateStateFilter();
+  if (dealerResults) {
+    populateDistrictFilter();
     renderDealers();
-    if (dealerSearch) dealerSearch.addEventListener("input", renderDealers);
-    if (dealerState) dealerState.addEventListener("change", renderDealers);
+    if (dealerDistrict) dealerDistrict.addEventListener("change", renderDealers);
   }
 
   /* ---------------- Footer year ---------------- */

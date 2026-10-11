@@ -207,8 +207,8 @@ section {
 }
 
 .brand img {
-  height: 84px;
-  width: 84px;
+  height: 104px;
+  width: 104px;
   object-fit: contain;
   border-radius: 8px;
 }
@@ -1256,8 +1256,8 @@ section {
   }
 
   .brand img {
-    height: 36px;
-    width: 36px;
+    height: 46px;
+    width: 46px;
   }
 
   .brand {

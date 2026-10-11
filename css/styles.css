@@ -1157,6 +1157,94 @@ section {
   }
 }
 
+.pd-section-wide {
+  max-width: 1100px;
+}
+
+.pd-related-grid {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.pd-related-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pd-related-grid::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.pd-related-card {
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pd-related-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.pd-related-media {
+  background: linear-gradient(160deg, var(--bg-alt) 0%, #e4e9f1 100%);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+}
+
+.pd-related-media img {
+  max-width: 100%;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.pd-related-info {
+  padding: 12px 14px 16px;
+}
+
+.pd-related-info h4 {
+  margin: 0 0 4px;
+  color: var(--navy);
+  font-size: 0.95rem;
+}
+
+.pd-related-info .model {
+  color: var(--orange-dark);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 720px) {
+  .pd-related-card {
+    flex: 0 0 160px;
+  }
+
+  .pd-related-media {
+    min-height: 100px;
+    padding: 12px;
+  }
+
+  .pd-related-media img {
+    max-height: 76px;
+  }
+}
+
 /* ---------- Dealers ---------- */
 .dealers {
   background: var(--bg);

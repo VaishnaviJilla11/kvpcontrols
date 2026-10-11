@@ -1251,6 +1251,20 @@ section {
 }
 
 @media (max-width: 720px) {
+  .nav-wrap {
+    padding: 6px 14px;
+  }
+
+  .brand img {
+    height: 36px;
+    width: 36px;
+  }
+
+  .brand {
+    gap: 6px;
+    font-size: 0.95rem;
+  }
+
   .nav-links {
     position: absolute;
     top: 100%;
@@ -1274,6 +1288,16 @@ section {
 
   .hero h1 {
     font-size: 2.1rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn {
+    justify-content: center;
+    width: 100%;
   }
 
   .feature-grid {

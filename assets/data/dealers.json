@@ -4,7 +4,8 @@
     "Tirupati",
     "Kadapa",
     "Kurnool",
-    "Warangal"
+    "Warangal",
+    "Hyderabad"
   ],
   "dealers": [
     {
@@ -18,6 +19,18 @@
       "name": "Someshwara Electricals",
       "phone": "7968888888",
       "address": "8-10-107"
+    },
+    {
+      "district": "Kadapa",
+      "name": "Ganesh engg electricals",
+      "phone": "5188767998",
+      "address": "Gannu"
+    },
+    {
+      "district": "Hyderabad",
+      "name": "Vasavi Polymers",
+      "phone": "9849079474",
+      "address": "PLOT NO 10, MIE Rd, Indra Reddy Allwyn Colony, Hafeezpet, Hyderabad, Telangana 500049"
     }
   ]
 }

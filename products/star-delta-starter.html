@@ -34,7 +34,10 @@
 <main>
   <section class="product-detail">
     <div class="container">
-      <a class="pd-back" href="../index.html#products">&larr; Back to Products</a>
+      <div class="pd-top-row">
+        <a class="pd-back" href="../index.html#products">&larr; Back to Products</a>
+        <button type="button" id="langToggle" class="lang-toggle" aria-pressed="false">తెలుగు</button>
+      </div>
 
       <div class="pd-hero">
         <div class="pd-media red">
@@ -42,9 +45,9 @@
         </div>
         <div class="pd-info">
           <div class="product-badges"><span class="badge badge-phase">Motor Starter</span></div>
-          <h1>Star-Delta Starter</h1>
+          <h1 data-te="స్టార్-డెల్టా స్టార్టర్">Star-Delta Starter</h1>
           <div class="model">Semi-Automatic &middot; 1 to 15 HP</div>
-          <p class="pd-lead">
+          <p class="pd-lead" data-te="త్రీ ఫేజ్ పంప్ మరియు మోటార్ అవసరాల కోసం నియంత్రిత స్టార్ట్ — స్టార్లో ప్రారంభించి సాధారణ రన్నింగ్ కోసం డెల్టాకి మారుతుంది.">
             A controlled start for three-phase pump and motor applications — starting in star and
             changing to delta for normal running.
           </p>
@@ -57,15 +60,15 @@
       </div>
 
       <div class="pd-section">
-        <h2>Overview</h2>
-        <p>
+        <h2 data-te="అవలోకనం">Overview</h2>
+        <p data-te="స్టార్-డెల్టా స్టార్టర్ మొదట మోటారు వైండింగ్‌లను స్టార్ కాన్ఫిగ్యురేషన్‌లో ఎన్‌ర్జైజ్ చేస్తుంది — ఇక్కడ ప్రతి వైండింగ్ తక్కువ వోల్టేజీని చూస్తుంది — ఆపై మోటారు రన్నింగ్ స్పీడ్కు దగ్గరగా వచ్చిన తర్వాత పూర్తి-వోల్టేజ్ సాధారణ రన్నింగ్ కోసం డెల్టాకి మారుతుంది, దీని వలన డైరెక్ట్-ఆన్-లైన్ స్టార్ట్తో పోలిస్తే స్టార్ట్-అప్ వద్ద తీసుకునే కరెంట్ తగ్గుతుంది. సరఫరా నుండి అధిక ఇన్‌రష్ కరెంట్ను తీసుకునే పెద్ద మోటార్లకు ఇది బాగా సరిపోతుంది.">
           A star-delta starter reduces the current drawn at start-up compared to a direct-on-line
           start by first energising the motor windings in star configuration — where each winding
           sees a lower voltage — and then switching to delta for full-voltage normal running once
           the motor is close to running speed. This makes it a good fit for larger motors where a
           straight DOL start would otherwise draw an excessive inrush current from the supply.
         </p>
-        <p>
+        <p data-te="KVP యొక్క యూనిట్ లైన్ కాంటాక్టర్, స్టార్ కాంటాక్టర్, డెల్టా కాంటాక్టర్ మరియు ఓవర్‌లోడ్ రిలేతో తయారు చేయబడింది, మరియు సెమీ-ఆటోమేటిక్ లేదా ఫుల్లీ-ఆటోమేటిక్ చేంజోవర్‌లో లభిస్తుంది. దీనికి డెల్టాలో రన్ చేయడానికి రేట్ చేయబడిన సిక్స్-టెర్మినల్ మోటారు అవసరం.">
           KVP's unit is built from a line contactor, a star contactor, a delta contactor and an
           overload relay, and is available in semi-automatic or fully-automatic changeover. It
           requires a six-terminal motor that is rated to run in delta.
@@ -73,21 +76,21 @@
       </div>
 
       <div class="pd-section">
-        <h2>Key Features</h2>
+        <h2 data-te="ముఖ్య ఫీచర్లు">Key Features</h2>
         <ul class="product-features">
-          <li>Reduces Starting Current vs. D.O.L.</li>
-          <li>Line, Star &amp; Delta Contactors + Overload Relay</li>
-          <li>Needs a Six-Terminal Motor Rated for Delta</li>
-          <li>Semi-Automatic or Fully-Automatic Changeover</li>
+          <li data-te="D.O.L. తో పోలిస్తే స్టార్టింగ్ కరెంట్ను తగ్గిస్తుంది">Reduces Starting Current vs. D.O.L.</li>
+          <li data-te="లైన్, స్టార్ & డెల్టా కాంటాక్టర్లు + ఓవర్‌లోడ్ రిలే">Line, Star &amp; Delta Contactors + Overload Relay</li>
+          <li data-te="డెల్టా కోసం రేట్ చేయబడిన సిక్స్-టెర్మినల్ మోటారు అవసరం">Needs a Six-Terminal Motor Rated for Delta</li>
+          <li data-te="సెమీ-ఆటోమేటిక్ లేదా ఫుల్లీ-ఆటోమేటిక్ చేంజోవర్">Semi-Automatic or Fully-Automatic Changeover</li>
         </ul>
       </div>
 
       <div class="pd-section">
-        <h2>Typical Applications</h2>
+        <h2 data-te="సాధారణ ఉపయోగాలు">Typical Applications</h2>
         <ul class="product-features">
-          <li>Agricultural &amp; industrial pump motors from 1 to 15 HP</li>
-          <li>Deep borewell submersible motors</li>
-          <li>Compressors &amp; machinery needing reduced starting current</li>
+          <li data-te="1 నుండి 15 HP వరకు వ్యవసాయ & పారిశ్రామిక పంప్ మోటార్లు">Agricultural &amp; industrial pump motors from 1 to 15 HP</li>
+          <li data-te="లోతైన బోర్‌వెల్ సబ్‌మెర్సిబుల్ మోటార్లు">Deep borewell submersible motors</li>
+          <li data-te="తక్కువ స్టార్టింగ్ కరెంట్ అవసరమైన కంప్రెసర్లు & యంత్రాలు">Compressors &amp; machinery needing reduced starting current</li>
         </ul>
       </div>
 

@@ -80,6 +80,27 @@
     });
   });
 
+  /* ---------------- Product detail Telugu toggle ---------------- */
+  const langToggle = document.getElementById("langToggle");
+  if (langToggle) {
+    const i18nEls = document.querySelectorAll("[data-te]");
+    let teluguActive = false;
+
+    langToggle.addEventListener("click", function () {
+      teluguActive = !teluguActive;
+      i18nEls.forEach(function (el) {
+        if (teluguActive) {
+          el.dataset.en = el.dataset.en || el.textContent;
+          el.textContent = el.dataset.te;
+        } else if (el.dataset.en) {
+          el.textContent = el.dataset.en;
+        }
+      });
+      langToggle.textContent = teluguActive ? "English" : "తెలుగు";
+      langToggle.setAttribute("aria-pressed", String(teluguActive));
+    });
+  }
+
   /* ---------------- Scrollspy for active nav link ---------------- */
   const sections = document.querySelectorAll("main section[id]");
   const navAnchors = document.querySelectorAll(".nav-links a[href^='#']");

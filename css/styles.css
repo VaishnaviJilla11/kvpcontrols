@@ -39,6 +39,12 @@ body {
   line-height: 1.6;
 }
 
+h1, h2, h3, h4,
+.brand, .btn, .section-tag,
+.nav-links a, .badge, .model {
+  font-family: "Poppins", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
 img {
   max-width: 100%;
   display: block;
@@ -1281,6 +1287,78 @@ section {
 /* ---------- Dealers ---------- */
 .dealers {
   background: var(--bg);
+}
+
+/* ---------- Scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Back to top ---------- */
+.back-to-top {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background: var(--navy);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(11, 37, 69, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease, background 0.15s ease;
+  z-index: 90;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: var(--red);
+}
+
+.back-to-top svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 720px) {
+  .back-to-top {
+    left: 16px;
+    bottom: 16px;
+    width: 42px;
+    height: 42px;
+  }
 }
 
 .dealer-controls {

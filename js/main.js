@@ -30,6 +30,46 @@
     });
   }
 
+  /* ---------------- Scroll reveal animations ---------------- */
+  document.querySelectorAll(".pd-hero, .pd-section").forEach(function (el) {
+    el.classList.add("reveal");
+  });
+
+  const revealEls = document.querySelectorAll(".reveal");
+  if (revealEls.length) {
+    if ("IntersectionObserver" in window) {
+      const revealObserver = new IntersectionObserver(
+        function (entries, observer) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("reveal-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+      );
+      revealEls.forEach(function (el) {
+        revealObserver.observe(el);
+      });
+    } else {
+      revealEls.forEach(function (el) {
+        el.classList.add("reveal-visible");
+      });
+    }
+  }
+
+  /* ---------------- Back to top button ---------------- */
+  const backToTop = document.querySelector(".back-to-top");
+  if (backToTop) {
+    window.addEventListener("scroll", function () {
+      backToTop.classList.toggle("visible", window.scrollY > 500);
+    });
+    backToTop.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
   /* ---------------- Product grid/list view toggle ---------------- */
   const productGrid = document.getElementById("productGrid");
   const viewButtons = document.querySelectorAll(".view-btn");

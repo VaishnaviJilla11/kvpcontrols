@@ -120,6 +120,16 @@
     });
   });
 
+  /* ---------------- FAQ accordion ---------------- */
+  document.querySelectorAll(".faq-question").forEach(function (btn) {
+    const panel = btn.nextElementSibling;
+    if (!panel) return;
+    btn.addEventListener("click", function () {
+      const isOpen = panel.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(isOpen));
+    });
+  });
+
   /* ---------------- Product detail Telugu toggle ---------------- */
   const langToggle = document.getElementById("langToggle");
   if (langToggle) {

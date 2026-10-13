@@ -287,10 +287,9 @@ section {
 }
 
 .brand img {
-  height: 104px;
-  width: 104px;
+  height: 56px;
+  width: auto;
   object-fit: contain;
-  border-radius: 8px;
 }
 
 .nav-links {
@@ -1945,8 +1944,8 @@ section {
   }
 
   .brand img {
-    height: 62px;
-    width: 62px;
+    height: 44px;
+    width: auto;
   }
 
   .brand {

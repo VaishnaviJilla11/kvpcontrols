@@ -5,7 +5,8 @@
     "Kadapa",
     "Kurnool",
     "Warangal",
-    "Hyderabad"
+    "Hyderabad",
+    "Mahabubnagar"
   ],
   "dealers": [
     {
@@ -31,6 +32,12 @@
       "name": "Vasavi Polymers",
       "phone": "9849079474",
       "address": "PLOT NO 10, MIE Rd, Indra Reddy Allwyn Colony, Hafeezpet, Hyderabad, Telangana 500049"
+    },
+    {
+      "district": "Mahabubnagar",
+      "name": "Pandu engineering and electricals",
+      "phone": "9030774329",
+      "address": "1-7-46/A, I KOSGI ROAD, I MAHABUBNAGAR, \n509001"
     }
   ]
 }

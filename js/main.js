@@ -130,6 +130,22 @@
     });
   });
 
+  /* ---------------- FAQ phase tabs (Single Phase / Three Phase) ---------------- */
+  const faqTabs = document.querySelectorAll(".faq-tab");
+  if (faqTabs.length) {
+    faqTabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        faqTabs.forEach(function (t) {
+          t.classList.toggle("active", t === tab);
+        });
+        const selected = tab.dataset.faqTab;
+        document.querySelectorAll(".faq-list[data-faq-group]").forEach(function (list) {
+          list.hidden = list.dataset.faqGroup !== selected;
+        });
+      });
+    });
+  }
+
   /* ---------------- Product detail Telugu toggle ---------------- */
   const langToggle = document.getElementById("langToggle");
   if (langToggle) {

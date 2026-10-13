@@ -377,13 +377,17 @@
     <div class="container">
       <div class="section-head reveal">
         <span class="section-tag">Help &amp; Settings</span>
-        <h2>Frequently Asked Questions</h2>
+        <h2>Frequently Asked Questions (FAQ's)</h2>
         <p>Common panel setting questions, answered in English &amp; Telugu.</p>
       </div>
-      <div class="faq-list reveal">
+      <div class="faq-tabs reveal">
+        <button type="button" class="faq-tab active" data-faq-tab="single">Single Phase</button>
+        <button type="button" class="faq-tab" data-faq-tab="three">Three Phase</button>
+      </div>
+      <div class="faq-list reveal" data-faq-group="single">
         <div class="faq-item">
           <button type="button" class="faq-question" aria-expanded="false">
-            <span>How do I set the OFF Timer?</span>
+            <span class="faq-q"><span>How do I set the OFF Timer?</span><span class="faq-q-te">ఆఫ్ టైమర్‌ను ఎలా సెట్ చేయాలి?</span></span>
             <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </button>
           <div class="faq-answer">
@@ -393,7 +397,7 @@
         </div>
         <div class="faq-item">
           <button type="button" class="faq-question" aria-expanded="false">
-            <span>How do I set/reset the Overload (oL) value?</span>
+            <span class="faq-q"><span>How do I set/reset the Overload (oL) value?</span><span class="faq-q-te">ఓవర్‌లోడ్ (oL) విలువను ఎలా సెట్/రీసెట్ చేయాలి?</span></span>
             <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </button>
           <div class="faq-answer">
@@ -403,7 +407,7 @@
         </div>
         <div class="faq-item">
           <button type="button" class="faq-question" aria-expanded="false">
-            <span>How do I set No-Load / Dry-Run (drY) protection?</span>
+            <span class="faq-q"><span>How do I set No-Load / Dry-Run (drY) protection?</span><span class="faq-q-te">నో-లోడ్ / డ్రై-రన్ (drY) రక్షణను ఎలా సెట్ చేయాలి?</span></span>
             <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </button>
           <div class="faq-answer">
@@ -413,7 +417,7 @@
         </div>
         <div class="faq-item">
           <button type="button" class="faq-question" aria-expanded="false">
-            <span>What are the ideal oL / drY settings for my motor HP?</span>
+            <span class="faq-q"><span>What are the ideal oL / drY settings for my motor HP?</span><span class="faq-q-te">నా మోటార్ HP కోసం ఆదర్శ oL / drY సెట్టింగ్‌లు ఏమిటి?</span></span>
             <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </button>
           <div class="faq-answer">
@@ -431,7 +435,7 @@
         </div>
         <div class="faq-item">
           <button type="button" class="faq-question" aria-expanded="false">
-            <span>My panel shows oL or drY &mdash; what does that mean?</span>
+            <span class="faq-q"><span>My panel shows oL or drY &mdash; what does that mean?</span><span class="faq-q-te">నా ప్యానెల్‌లో oL లేదా drY కనిపిస్తోంది &mdash; దాని అర్థం ఏమిటి?</span></span>
             <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </button>
           <div class="faq-answer">
@@ -440,7 +444,76 @@
           </div>
         </div>
       </div>
-      <p class="brochure-note">Still have a question? Call our Technical Support line: <a href="tel:+919000933113">+91 90009 33113</a>.</p>
+      <div class="faq-list reveal" data-faq-group="three" hidden>
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span class="faq-q"><span>How do I connect the supply and check phasing?</span><span class="faq-q-te">సరఫరాను ఎలా కనెక్ట్ చేయాలి మరియు ఫేజింగ్‌ను ఎలా తనిఖీ చేయాలి?</span></span>
+            <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <p><strong>English:</strong> Connect the supply R-Y-B and motor A-B-C wires correctly &mdash; the display reads OFF when the wiring and incoming phases are healthy (415V). If the panel shows power OFF due to a phase fault, swap any two INPUT phases and check again.</p>
+            <p><strong>తెలుగు:</strong> సరఫరా R-Y-B మరియు మోటారు A-B-C వైర్లను సరిగ్గా కనెక్ట్ చేయండి &mdash; వైరింగ్ మరియు వచ్చే ఫేజులు సరిగ్గా ఉంటే డిస్‌ప్లే OFF చూపిస్తుంది (415V). ఫేజ్ సమస్య వలన ప్యానెల్ పవర్ ఆఫ్ చూపిస్తే, ఏవైనా రెండు ఇన్‌పుట్ ఫేజులను మార్చి మళ్లీ తనిఖీ చేయండి.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span class="faq-q"><span>How do I set/reset the Overload (OL) value?</span><span class="faq-q-te">ఓవర్‌లోడ్ (OL) విలువను ఎలా సెట్/రీసెట్ చేయాలి?</span></span>
+            <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <p><strong>English:</strong> Press SET &mdash; the display shows OL. Use the START/STOP buttons to adjust the amperage to match your motor's rated current, then press SET again to confirm.</p>
+            <p><strong>తెలుగు:</strong> SET నొక్కండి &mdash; డిస్‌ప్లేలో OL కనిపిస్తుంది. మీ మోటారు రేటెడ్ కరెంట్‌కు సరిపోయేలా START/STOP బటన్లతో ఆంపియర్ విలువను సర్దండి, తర్వాత నిర్ధారించడానికి మళ్లీ SET నొక్కండి.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span class="faq-q"><span>How do I set No-Load / Dry-Run (drY) protection?</span><span class="faq-q-te">నో-లోడ్ / డ్రై-రన్ (drY) రక్షణను ఎలా సెట్ చేయాలి?</span></span>
+            <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <p><strong>English:</strong> Press SET again &mdash; the display shows drY. Use START/STOP to adjust the amperage at which the panel should detect dry-run/no-load, then press SET again to confirm.</p>
+            <p><strong>తెలుగు:</strong> మళ్లీ SET నొక్కండి &mdash; డిస్‌ప్లేలో drY కనిపిస్తుంది. ప్యానెల్ డ్రై-రన్/నో-లోడ్‌ను గుర్తించాల్సిన ఆంపియర్ విలువను START/STOP తో సర్దండి, తర్వాత నిర్ధారించడానికి మళ్లీ SET నొక్కండి.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span class="faq-q"><span>How do I set the OFF Timer?</span><span class="faq-q-te">ఆఫ్ టైమర్‌ను ఎలా సెట్ చేయాలి?</span></span>
+            <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <p><strong>English:</strong> Press SET again to show "t". Use START/STOP to set the number of minutes for the timer. Press SET once more to exit settings.</p>
+            <p><strong>తెలుగు:</strong> మళ్లీ SET నొక్కితే "t" కనిపిస్తుంది. టైమర్ కోసం నిమిషాలను START/STOP తో సెట్ చేయండి. సెట్టింగ్స్ నుండి బయటకు రావడానికి SET మళ్లీ నొక్కండి.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span class="faq-q"><span>What are the suggested OL / drY settings?</span><span class="faq-q-te">సూచించిన OL / drY సెట్టింగ్‌లు ఏమిటి?</span></span>
+            <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <table class="faq-table">
+              <thead><tr><th>Setting</th><th>Suggested</th></tr></thead>
+              <tbody>
+                <tr><td>Overload (OL)</td><td>Running amps + 2A</td></tr>
+                <tr><td>Dry Run (drY)</td><td>Running amps &minus; 2A</td></tr>
+              </tbody>
+            </table>
+            <p><strong>English:</strong> These are general starting points &mdash; always verify against your motor's actual rated and running amps before finalizing.</p>
+            <p><strong>తెలుగు:</strong> ఇవి సాధారణ ప్రారంభ విలువలు &mdash; తుది నిర్ణయం ముందు మీ మోటారు యొక్క వాస్తవ రేటెడ్ మరియు రన్నింగ్ ఆంప్స్‌ను తప్పకుండా సరిచూసుకోండి.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button type="button" class="faq-question" aria-expanded="false">
+            <span class="faq-q"><span>My panel shows OL or drY &mdash; what does that mean?</span><span class="faq-q-te">నా ప్యానెల్‌లో OL లేదా drY కనిపిస్తోంది &mdash; దాని అర్థం ఏమిటి?</span></span>
+            <span class="faq-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="faq-answer">
+            <p><strong>English:</strong> "OL" means the motor current has exceeded the set overload limit &mdash; check the motor/load for jamming or overheating before resuming. "drY" means the panel detected no-load/dry-run conditions &mdash; check the pump/water source before restarting.</p>
+            <p><strong>తెలుగు:</strong> "OL" అంటే మోటారు కరెంట్ సెట్ చేసిన ఓవర్‌లోడ్ పరిమితిని మించిపోయింది &mdash; మళ్లీ ఆన్ చేసే ముందు మోటారు/లోడ్‌లో జామింగ్ లేదా వేడెక్కడం లేదని చూసుకోండి. "drY" అంటే ప్యానెల్ నో-లోడ్/డ్రై-రన్ పరిస్థితిని గుర్తించింది &mdash; మళ్లీ ఆన్ చేసే ముందు పంప్/నీటి మూలాన్ని తనిఖీ చేయండి.</p>
+          </div>
+        </div>
+      </div>
+      <p class="brochure-note">Still have a question? Call our Technical Support line: <a href="tel:+919133663737">+91 91336 63737</a>.</p>
     </div>
   </section>
 
@@ -470,14 +543,14 @@
         <div class="contact-card">
           <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
           <h4>Product Support</h4>
-          <p>Problem with your product? Contact our customer care:</p>
+          <p>Need a replacement/issue related to the product?</p>
           <a class="phone-link" href="tel:+919000933113">+91 90009 33113</a>
         </div>
         <div class="contact-card">
           <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
           <h4>Technical Support</h4>
-          <p>Need help from a technician?</p>
-          <a class="phone-link" href="tel:+919000933113">+91 90009 33113</a>
+          <p>Need assistance with fixing a panel?</p>
+          <a class="phone-link" href="tel:+919133663737">+91 91336 63737</a>
         </div>
         <div class="contact-card contact-cta" id="become-dealer">
           <div class="cta-copy">

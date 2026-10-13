@@ -612,11 +612,12 @@ section {
   z-index: 1;
 }
 
-.about .container {
+.about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 56px;
   align-items: center;
+  margin-top: 40px;
 }
 
 .about h2 {
@@ -1778,8 +1779,22 @@ section {
 }
 
 .contact-cta .cta-copy h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 1.15rem;
   margin: 0 0 6px;
+}
+
+.cta-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .contact-cta .cta-copy p {
@@ -1884,7 +1899,7 @@ section {
     grid-template-columns: 1fr;
   }
 
-  .about .container {
+  .about-grid {
     grid-template-columns: 1fr;
   }
 

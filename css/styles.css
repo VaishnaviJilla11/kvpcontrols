@@ -900,35 +900,13 @@ section {
 
 .product-media {
   position: relative;
-  background: linear-gradient(160deg, var(--bg-alt) 0%, #e4e9f1 100%);
+  background: var(--white);
   padding: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 240px;
   overflow: hidden;
-}
-
-.product-media::before {
-  content: "";
-  position: absolute;
-  top: -40%;
-  right: -30%;
-  width: 70%;
-  height: 180%;
-  background: linear-gradient(135deg, var(--navy), var(--navy-light));
-  opacity: 0.08;
-  transform: rotate(18deg);
-}
-
-.product-media.orange::before {
-  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
-  opacity: 0.14;
-}
-
-.product-media.red::before {
-  background: linear-gradient(135deg, var(--red), var(--red-dark));
-  opacity: 0.12;
 }
 
 .product-media img {
@@ -1155,35 +1133,14 @@ section {
 .pd-media {
   position: relative;
   border-radius: var(--radius);
-  background: linear-gradient(160deg, var(--bg-alt) 0%, #e4e9f1 100%);
+  background: var(--white);
+  border: 1px solid var(--border);
   padding: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 300px;
   overflow: hidden;
-}
-
-.pd-media::before {
-  content: "";
-  position: absolute;
-  top: -40%;
-  right: -30%;
-  width: 70%;
-  height: 180%;
-  background: linear-gradient(135deg, var(--navy), var(--navy-light));
-  opacity: 0.08;
-  transform: rotate(18deg);
-}
-
-.pd-media.orange::before {
-  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
-  opacity: 0.14;
-}
-
-.pd-media.red::before {
-  background: linear-gradient(135deg, var(--red), var(--red-dark));
-  opacity: 0.12;
 }
 
 .pd-media img {
@@ -1316,7 +1273,8 @@ section {
 }
 
 .pd-related-media {
-  background: linear-gradient(160deg, var(--bg-alt) 0%, #e4e9f1 100%);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
   padding: 16px;
   display: flex;
   align-items: center;
@@ -1987,8 +1945,8 @@ section {
   }
 
   .brand img {
-    height: 46px;
-    width: 46px;
+    height: 62px;
+    width: 62px;
   }
 
   .brand {

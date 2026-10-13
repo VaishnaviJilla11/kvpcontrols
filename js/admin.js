@@ -23,6 +23,7 @@
   const rowsBody = document.getElementById("adminDealerRows");
   const refreshBtn = document.getElementById("refreshBtn");
   const newDistrictInput = document.getElementById("fNewDistrict");
+  const newDistrictStateSelect = document.getElementById("fNewDistrictState");
   const addDistrictBtn = document.getElementById("addDistrictBtn");
   const districtChips = document.getElementById("districtChips");
   const districtStatus = document.getElementById("districtStatus");
@@ -98,22 +99,38 @@
     return body;
   }
 
+  function normalizedDistricts() {
+    return (currentData.districts || []).map(function (d) {
+      return typeof d === "string" ? { name: d, state: "" } : d;
+    });
+  }
+
   function renderDistricts() {
     districtSelect.querySelectorAll("option:not(:first-child)").forEach(function (o) { o.remove(); });
-    (currentData.districts || []).forEach(function (district) {
-      const option = document.createElement("option");
-      option.value = district;
-      option.textContent = district;
-      districtSelect.appendChild(option);
+    const districts = normalizedDistricts();
+    const byState = {};
+    districts.forEach(function (d) {
+      const key = d.state || "Other";
+      (byState[key] = byState[key] || []).push(d);
+    });
+    Object.keys(byState).sort().forEach(function (state) {
+      const group = document.createElement("optgroup");
+      group.label = state;
+      byState[state].forEach(function (d) {
+        const option = document.createElement("option");
+        option.value = d.name;
+        option.textContent = d.name;
+        group.appendChild(option);
+      });
+      districtSelect.appendChild(group);
     });
 
-    const districts = currentData.districts || [];
     districtChips.innerHTML = districts.length
       ? districts
-          .map(function (district, index) {
+          .map(function (d, index) {
             return (
-              '<span class="district-chip">' + escapeHtml(district) +
-              '<button type="button" data-remove-district="' + index + '" aria-label="Remove ' + escapeHtml(district) + '">&times;</button></span>'
+              '<span class="district-chip">' + escapeHtml(d.name) + (d.state ? ' <small>(' + escapeHtml(d.state) + ')</small>' : '') +
+              '<button type="button" data-remove-district="' + index + '" aria-label="Remove ' + escapeHtml(d.name) + '">&times;</button></span>'
             );
           })
           .join("")
@@ -264,9 +281,10 @@
   addDistrictBtn.addEventListener("click", async function () {
     const name = newDistrictInput.value.trim();
     if (!name) return;
+    const state = newDistrictStateSelect ? newDistrictStateSelect.value : "";
 
-    const districts = currentData.districts || [];
-    const exists = districts.some(function (d) { return d.toLowerCase() === name.toLowerCase(); });
+    const districts = normalizedDistricts();
+    const exists = districts.some(function (d) { return d.name.toLowerCase() === name.toLowerCase(); });
     if (exists) {
       setStatus(districtStatus, '"' + name + '" is already in the list.', "error");
       return;
@@ -274,9 +292,9 @@
 
     addDistrictBtn.disabled = true;
     setStatus(districtStatus, "Saving...", "neutral");
-    currentData.districts = districts.concat([name]);
+    currentData.districts = districts.concat([{ name: name, state: state }]);
 
-    const ok = await saveToWorker("Add district: " + name);
+    const ok = await saveToWorker("Add district: " + name + " (" + state + ")");
     addDistrictBtn.disabled = false;
     if (ok) {
       renderDistricts();
@@ -292,16 +310,19 @@
     const btn = event.target.closest("[data-remove-district]");
     if (!btn) return;
     const index = Number(btn.dataset.removeDistrict);
-    const district = currentData.districts[index];
-    const inUse = (currentData.dealers || []).some(function (d) { return d.district === district; });
-    if (inUse && !confirm('"' + district + '" has dealers assigned to it. Remove it from the district list anyway?')) return;
-    if (!inUse && !confirm('Remove district "' + district + '"?')) return;
+    const districts = normalizedDistricts();
+    const district = districts[index];
+    const inUse = (currentData.dealers || []).some(function (d) { return d.district === district.name; });
+    if (inUse && !confirm('"' + district.name + '" has dealers assigned to it. Remove it from the district list anyway?')) return;
+    if (!inUse && !confirm('Remove district "' + district.name + '"?')) return;
 
-    const backup = currentData.districts.slice();
-    currentData.districts.splice(index, 1);
+    const backup = districts.slice();
+    const updated = districts.slice();
+    updated.splice(index, 1);
+    currentData.districts = updated;
     btn.closest(".district-chip").style.opacity = "0.5";
 
-    const ok = await saveToWorker("Remove district: " + district);
+    const ok = await saveToWorker("Remove district: " + district.name);
     if (ok) {
       renderDistricts();
       setStatus(districtStatus, "Removed.", "success");

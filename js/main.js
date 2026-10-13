@@ -146,24 +146,31 @@
     });
   }
 
-  /* ---------------- Product detail Telugu toggle ---------------- */
-  const langToggle = document.getElementById("langToggle");
-  if (langToggle) {
+  /* ---------------- Product detail language selector ---------------- */
+  const langSelect = document.getElementById("langSelect");
+  if (langSelect) {
     const i18nEls = document.querySelectorAll("[data-te]");
-    let teluguActive = false;
+    const faqSecondaryEls = document.querySelectorAll(".faq-secondary");
+    const faqQSecondaryEls = document.querySelectorAll(".faq-q-te");
+    const langLabels = { te: "\u0c24\u0c46\u0c32\u0c41\u0c17\u0c41", ta: "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", hi: "\u0939\u093f\u0928\u094d\u0926\u0940", kn: "\u0c95\u0ca8\u0ccd\u0ca8\u0ca1" };
 
-    langToggle.addEventListener("click", function () {
-      teluguActive = !teluguActive;
+    langSelect.addEventListener("change", function () {
+      const lang = langSelect.value;
+      const key = lang === "en" ? "te" : lang;
+
       i18nEls.forEach(function (el) {
-        if (teluguActive) {
-          el.dataset.en = el.dataset.en || el.textContent;
-          el.textContent = el.dataset.te;
-        } else if (el.dataset.en) {
-          el.textContent = el.dataset.en;
-        }
+        el.dataset.en = el.dataset.en || el.textContent;
+        el.textContent = lang === "en" ? el.dataset.en : (el.dataset[lang] || el.dataset.en);
       });
-      langToggle.textContent = teluguActive ? "English" : "తెలుగు";
-      langToggle.setAttribute("aria-pressed", String(teluguActive));
+
+      faqQSecondaryEls.forEach(function (el) {
+        el.textContent = el.dataset[key] || el.textContent;
+      });
+
+      faqSecondaryEls.forEach(function (el) {
+        const text = el.dataset[key] || el.dataset.te;
+        el.innerHTML = "<strong>" + langLabels[key] + ":</strong> " + text;
+      });
     });
   }
 
@@ -191,6 +198,7 @@
 
   /* ---------------- Dealer directory ---------------- */
   const dealerResults = document.getElementById("dealerResults");
+  const dealerState = document.getElementById("dealerState");
   const dealerDistrict = document.getElementById("dealerDistrict");
   const dealerSearch = document.getElementById("dealerSearch");
   let dealers = [];
@@ -218,8 +226,8 @@
     return (
       '<div class="dealer-empty">' +
       '<div class="icon">🗺️</div>' +
-      "<h4>Select a district or search by name</h4>" +
-      "<p>Choose a district from the dropdown, or type a dealer name to search, to view KVP dealers.</p>" +
+      "<h4>Select a state or district, or search by name</h4>" +
+      "<p>Choose a state, then a district, or type a dealer name to search, to view KVP dealers.</p>" +
       "</div>"
     );
   }
@@ -239,31 +247,52 @@
     );
   }
 
-  function populateDistrictFilter() {
-    if (!dealerDistrict) return;
-    districts.forEach(function (district) {
+  function populateStateFilter() {
+    if (!dealerState) return;
+    const states = Array.from(new Set(districts.map(function (d) { return d.state; }).filter(Boolean))).sort();
+    states.forEach(function (state) {
       const option = document.createElement("option");
-      option.value = district;
-      option.textContent = district;
-      dealerDistrict.appendChild(option);
+      option.value = state;
+      option.textContent = state;
+      dealerState.appendChild(option);
     });
+  }
+
+  function populateDistrictFilter(stateFilter) {
+    if (!dealerDistrict) return;
+    dealerDistrict.querySelectorAll("option:not(:first-child)").forEach(function (o) { o.remove(); });
+    districts
+      .filter(function (d) { return !stateFilter || d.state === stateFilter; })
+      .forEach(function (d) {
+        const option = document.createElement("option");
+        option.value = d.name;
+        option.textContent = d.name;
+        dealerDistrict.appendChild(option);
+      });
+    dealerDistrict.value = "";
   }
 
   function renderDealers() {
     if (!dealerResults) return;
 
+    const selectedState = (dealerState && dealerState.value) || "";
     const selectedDistrict = (dealerDistrict && dealerDistrict.value) || "";
     const query = ((dealerSearch && dealerSearch.value) || "").trim().toLowerCase();
 
-    if (!selectedDistrict && !query) {
+    if (!selectedState && !selectedDistrict && !query) {
       dealerResults.innerHTML = promptStateHtml();
       return;
     }
 
+    const districtsInState = selectedState
+      ? districts.filter(function (d) { return d.state === selectedState; }).map(function (d) { return d.name; })
+      : null;
+
     const filtered = dealers.filter(function (dealer) {
+      const matchesState = !districtsInState || districtsInState.indexOf(dealer.district) !== -1;
       const matchesDistrict = !selectedDistrict || dealer.district === selectedDistrict;
       const matchesQuery = !query || String(dealer.name || "").toLowerCase().includes(query);
-      return matchesDistrict && matchesQuery;
+      return matchesState && matchesDistrict && matchesQuery;
     });
 
     let emptyMessage;
@@ -271,8 +300,10 @@
       emptyMessage = "No dealers named \u201c" + escapeHtml(dealerSearch.value.trim()) + "\u201d found in " + escapeHtml(selectedDistrict) + ".";
     } else if (query) {
       emptyMessage = "No dealers found matching \u201c" + escapeHtml(dealerSearch.value.trim()) + "\u201d.";
-    } else {
+    } else if (selectedDistrict) {
       emptyMessage = "No dealers listed yet for " + escapeHtml(selectedDistrict) + ".";
+    } else {
+      emptyMessage = "No dealers listed yet for " + escapeHtml(selectedState) + ".";
     }
     emptyMessage += ' Call <a class="phone" href="tel:+919951773344">+91 99517 73344</a> and we\'ll connect you to the nearest one.';
 
@@ -285,9 +316,18 @@
       .then(function (res) { return res.json(); })
       .then(function (data) {
         dealers = data.dealers || [];
-        districts = data.districts || [];
-        populateDistrictFilter();
+        districts = (data.districts || []).map(function (d) {
+          return typeof d === "string" ? { name: d, state: "" } : d;
+        });
+        populateStateFilter();
+        populateDistrictFilter("");
         renderDealers();
+        if (dealerState) {
+          dealerState.addEventListener("change", function () {
+            populateDistrictFilter(dealerState.value);
+            renderDealers();
+          });
+        }
         if (dealerDistrict) dealerDistrict.addEventListener("change", renderDealers);
         if (dealerSearch) dealerSearch.addEventListener("input", renderDealers);
       })

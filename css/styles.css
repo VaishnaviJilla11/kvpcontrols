@@ -1096,29 +1096,24 @@ section {
   margin-bottom: 24px;
 }
 
-.lang-toggle {
+.lang-select {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 18px;
+  padding: 8px 32px 8px 18px;
   border-radius: 999px;
   border: 2px solid var(--navy);
-  background: transparent;
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23081b36' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 10px center / 14px 14px;
   color: var(--navy);
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.lang-toggle:hover {
-  background: var(--navy);
-  color: var(--white);
-}
-
-.lang-toggle[aria-pressed="true"] {
-  background: var(--navy);
-  color: var(--white);
+.lang-select:hover {
+  border-color: var(--red);
 }
 
 .pd-hero {

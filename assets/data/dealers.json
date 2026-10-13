@@ -1,12 +1,17 @@
 {
+  "states": [
+    "Telangana",
+    "Andhra Pradesh",
+    "Karnataka"
+  ],
   "districts": [
-    "Karminagar",
-    "Tirupati",
-    "Kadapa",
-    "Kurnool",
-    "Warangal",
-    "Hyderabad",
-    "Mahabubnagar"
+    { "name": "Karminagar", "state": "Telangana" },
+    { "name": "Warangal", "state": "Telangana" },
+    { "name": "Hyderabad", "state": "Telangana" },
+    { "name": "Mahabubnagar", "state": "Telangana" },
+    { "name": "Tirupati", "state": "Andhra Pradesh" },
+    { "name": "Kadapa", "state": "Andhra Pradesh" },
+    { "name": "Kurnool", "state": "Andhra Pradesh" }
   ],
   "dealers": [
     {

@@ -214,6 +214,12 @@
   border: 1px solid var(--border);
 }
 
+.district-chip small {
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
 .district-chip button {
   background: none;
   border: none;

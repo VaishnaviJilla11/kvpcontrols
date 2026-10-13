@@ -1096,6 +1096,20 @@ section {
   margin-bottom: 24px;
 }
 
+.lang-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(8, 27, 54, 0.06);
+}
+
+.lang-globe-icon {
+  color: var(--navy);
+  flex-shrink: 0;
+}
+
 .lang-select {
   display: inline-flex;
   align-items: center;

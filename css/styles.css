@@ -1917,6 +1917,23 @@ section {
 }
 
 @media (max-width: 720px) {
+  .trust-strip .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    justify-content: stretch;
+  }
+
+  .trust-item {
+    font-size: 0.82rem;
+  }
+
+  .trust-item .icon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.95rem;
+  }
+
   .nav-wrap {
     padding: 6px 14px;
   }

@@ -1,4 +1,4 @@
-# KVP Switchgear &amp; Intelligent Panel — Website
+# KVP Switchgear &amp; Intelligent Controls — Website
 
 A static marketing website for **KVP Trading Company**, showcasing the KVP range of
 intelligent submersible control panels, switchgear and motor starters, plus a searchable

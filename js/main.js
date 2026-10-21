@@ -4,6 +4,11 @@
 
   /* ---------------- Visit tracking (page views) ---------------- */
   (function trackVisit() {
+    // Only track real visits to the live domain — skip local file:// testing,
+    // localhost, and any other preview/dev environment.
+    const liveHosts = ["kvpcontrols.in", "www.kvpcontrols.in"];
+    if (liveHosts.indexOf(location.hostname) === -1) return;
+
     const WORKER_URL = "https://kvp-dealer-admin.jillavaishnavi.workers.dev";
     const payload = JSON.stringify({ action: "track", path: location.pathname });
     try {

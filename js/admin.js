@@ -185,6 +185,12 @@
     loadStats();
   }
 
+  function formatCount(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + "M";
+    if (n >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + "K";
+    return String(n);
+  }
+
   function renderVisitChart(days) {
     if (!days.length) {
       visitChart.innerHTML = '<p class="visit-chart-empty">No visit data yet.</p>';
@@ -196,9 +202,9 @@
         const pct = Math.round((d.count / max) * 100);
         const label = d.date.slice(5).replace("-", "/"); // MM/DD
         return (
-          '<div class="visit-bar-col" title="' + d.date + ": " + d.count + ' view(s)">' +
+          '<div class="visit-bar-col" title="' + d.date + ": " + d.count.toLocaleString() + ' view(s)">' +
           '<div class="visit-bar-track"><div class="visit-bar-fill" style="height:' + pct + '%"></div></div>' +
-          '<span class="visit-bar-count">' + d.count + '</span>' +
+          '<span class="visit-bar-count">' + formatCount(d.count) + '</span>' +
           '<span class="visit-bar-label">' + label + '</span>' +
           '</div>'
         );

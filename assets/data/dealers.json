@@ -36,12 +36,6 @@
   ],
   "dealers": [
     {
-      "district": "Warangal",
-      "name": "Someshwara Electricals",
-      "phone": "7968888888",
-      "address": "8-10-107"
-    },
-    {
       "district": "Hyderabad",
       "name": "Vasavi Polymers",
       "phone": "9849079474",

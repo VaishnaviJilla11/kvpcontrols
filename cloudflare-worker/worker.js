@@ -15,6 +15,9 @@
 //    Mark both as "Encrypt" / Secret (not plain text).
 // 6. Copy the Worker's URL shown at the top (e.g. https://kvp-dealer-admin.<you>.workers.dev)
 //    and paste it into js/admin.js as WORKER_URL.
+// 7. For visit tracking: Settings -> Bindings -> Add -> KV Namespace.
+//      - Create a new namespace (e.g. "kvp-visits"), bind it with variable name: VISITS
+//    Visit tracking works without this, but counts won't persist until it's bound.
 
 const GH_OWNER = "VaishnaviJilla11";
 const GH_REPO = "kvpcontrols";
@@ -93,6 +96,43 @@ async function saveData(token, data, message) {
   }
 }
 
+function todayStr() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+async function trackVisit(env, pagePath) {
+  if (!env.VISITS) return; // KV not bound yet; silently no-op
+  const day = todayStr();
+  const totalKey = "visits:total";
+  const dayKey = "visits:day:" + day;
+  const [totalRaw, dayRaw] = await Promise.all([
+    env.VISITS.get(totalKey),
+    env.VISITS.get(dayKey),
+  ]);
+  const total = (parseInt(totalRaw, 10) || 0) + 1;
+  const dayCount = (parseInt(dayRaw, 10) || 0) + 1;
+  await Promise.all([
+    env.VISITS.put(totalKey, String(total)),
+    env.VISITS.put(dayKey, String(dayCount)),
+  ]);
+}
+
+async function getVisitStats(env) {
+  if (!env.VISITS) {
+    return { total: 0, days: [], note: "KV namespace 'VISITS' not bound yet." };
+  }
+  const totalRaw = await env.VISITS.get("visits:total");
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const count = await env.VISITS.get("visits:day:" + key);
+    days.push({ date: key, count: parseInt(count, 10) || 0 });
+  }
+  return { total: parseInt(totalRaw, 10) || 0, days };
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
@@ -109,6 +149,17 @@ export default {
       return json({ error: "Invalid request body" }, 400);
     }
 
+    // Visit tracking is intentionally public (no password) so every visitor's
+    // page load can call it directly from the browser.
+    if (body && body.action === "track") {
+      try {
+        await trackVisit(env, body.path);
+        return json({ ok: true });
+      } catch (err) {
+        return json({ error: err.message || "Tracking failed" }, 500);
+      }
+    }
+
     if (!body || body.password !== env.ADMIN_PASSWORD) {
       return json({ error: "Invalid password" }, 401);
     }
@@ -123,6 +174,11 @@ export default {
         if (!body.data) return json({ error: "Missing data" }, 400);
         await saveData(env.GITHUB_TOKEN, body.data, body.message);
         return json({ ok: true });
+      }
+
+      if (body.action === "stats") {
+        const stats = await getVisitStats(env);
+        return json({ ok: true, stats });
       }
 
       return json({ error: "Unknown action" }, 400);

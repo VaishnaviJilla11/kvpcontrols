@@ -71,6 +71,34 @@
   margin: 0;
 }
 
+.visit-summary {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.visit-total-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 20px;
+  border: 1.5px solid var(--border, #d9dfe8);
+  border-radius: 10px;
+  background: rgba(242, 153, 74, 0.08);
+}
+
+.visit-total-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted, #6b7685);
+}
+
+.visit-total-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--navy, #081b36);
+}
+
 .admin-form {
   display: grid;
   gap: 16px;

@@ -27,6 +27,10 @@
   const addDistrictBtn = document.getElementById("addDistrictBtn");
   const districtChips = document.getElementById("districtChips");
   const districtStatus = document.getElementById("districtStatus");
+  const visitTotal = document.getElementById("visitTotal");
+  const visitDayRows = document.getElementById("visitDayRows");
+  const refreshStatsBtn = document.getElementById("refreshStatsBtn");
+  const statsStatus = document.getElementById("statsStatus");
 
   let currentData = { districts: [], dealers: [] };
   let editingIndex = null;
@@ -178,6 +182,33 @@
     } catch (err) {
       setStatus(connectionStatus, "Could not connect: " + err.message, "error");
     }
+    loadStats();
+  }
+
+  async function loadStats() {
+    const password = getPassword();
+    if (!password) {
+      setStatus(statsStatus, "Not connected.", "neutral");
+      return;
+    }
+    setStatus(statsStatus, "Loading stats...", "neutral");
+    try {
+      const body = await callWorker("stats");
+      const stats = body.stats || { total: 0, days: [] };
+      visitTotal.textContent = stats.total.toLocaleString();
+      visitDayRows.innerHTML = stats.days.length
+        ? stats.days
+            .slice()
+            .reverse()
+            .map(function (d) {
+              return "<tr><td>" + d.date + "</td><td>" + d.count + "</td></tr>";
+            })
+            .join("")
+        : '<tr class="dealer-empty-row"><td colspan="2">No visit data yet.</td></tr>';
+      setStatus(statsStatus, stats.note ? stats.note : "Updated.", stats.note ? "error" : "success");
+    } catch (err) {
+      setStatus(statsStatus, "Could not load stats: " + err.message, "error");
+    }
   }
 
   async function saveToWorker(commitMessage) {
@@ -215,6 +246,7 @@
   });
 
   refreshBtn.addEventListener("click", loadFromWorker);
+  refreshStatsBtn.addEventListener("click", loadStats);
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();

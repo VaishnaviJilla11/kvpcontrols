@@ -2,6 +2,22 @@
 (function () {
   "use strict";
 
+  /* ---------------- Visit tracking (page views) ---------------- */
+  (function trackVisit() {
+    const WORKER_URL = "https://kvp-dealer-admin.jillavaishnavi.workers.dev";
+    const payload = JSON.stringify({ action: "track", path: location.pathname });
+    try {
+      if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon(WORKER_URL, blob);
+      } else {
+        fetch(WORKER_URL, { method: "POST", body: payload, headers: { "Content-Type": "application/json" }, keepalive: true });
+      }
+    } catch (e) {
+      // Tracking must never break the page.
+    }
+  })();
+
   /* ---------------- Mobile nav toggle ---------------- */
   const navToggle = document.querySelector(".nav-toggle");
   const navLinks = document.querySelector(".nav-links");

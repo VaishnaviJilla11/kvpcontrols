@@ -104,6 +104,29 @@
     </div>
   </section>
 
+  <section class="admin-card">
+    <div class="admin-card-head">
+      <h2>Site Visits</h2>
+      <button type="button" id="refreshStatsBtn" class="btn-text-danger">Refresh</button>
+    </div>
+    <p class="admin-hint">Counts page views across the site (not unique visitors). Updates as people browse the live site.</p>
+    <div class="visit-summary">
+      <div class="visit-total-card">
+        <span class="visit-total-label">Total page views (all-time)</span>
+        <span id="visitTotal" class="visit-total-number">&mdash;</span>
+      </div>
+    </div>
+    <div class="dealer-table-wrap">
+      <table class="dealer-table">
+        <thead><tr><th>Date</th><th>Page Views</th></tr></thead>
+        <tbody id="visitDayRows">
+          <tr class="dealer-empty-row"><td colspan="2">Connect above to load stats.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p id="statsStatus" class="admin-status"></p>
+  </section>
+
 </main>
 
 <script src="js/admin.js"></script>

@@ -13,7 +13,10 @@
     const payload = JSON.stringify({ action: "track", path: location.pathname });
     try {
       if (navigator.sendBeacon) {
-        const blob = new Blob([payload], { type: "application/json" });
+        // Use a CORS-safelisted content type (text/plain) so sendBeacon never
+        // triggers a preflight — some browsers silently drop beacons that do.
+        // The Worker parses the body as JSON regardless of this header.
+        const blob = new Blob([payload], { type: "text/plain" });
         navigator.sendBeacon(WORKER_URL, blob);
       } else {
         fetch(WORKER_URL, { method: "POST", body: payload, headers: { "Content-Type": "application/json" }, keepalive: true });

@@ -2,12 +2,20 @@
 (function () {
   "use strict";
 
-  /* ---------------- Visit tracking (page views) ---------------- */
+  /* ---------------- Visit tracking (one count per browser session) ---------------- */
   (function trackVisit() {
     // Only track real visits to the live domain — skip local file:// testing,
     // localhost, and any other preview/dev environment.
     const liveHosts = ["kvpcontrols.in", "www.kvpcontrols.in"];
     if (liveHosts.indexOf(location.hostname) === -1) return;
+
+    // Only send once per tab session, so browsing multiple pages counts as one visit.
+    try {
+      if (sessionStorage.getItem("kvp_visit_tracked")) return;
+      sessionStorage.setItem("kvp_visit_tracked", "1");
+    } catch (e) {
+      // sessionStorage blocked (private mode etc.) — fall through and track anyway.
+    }
 
     const WORKER_URL = "https://kvp-dealer-admin.jillavaishnavi.workers.dev";
     const payload = JSON.stringify({ action: "track", path: location.pathname });

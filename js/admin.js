@@ -28,7 +28,7 @@
   const districtChips = document.getElementById("districtChips");
   const districtStatus = document.getElementById("districtStatus");
   const visitTotal = document.getElementById("visitTotal");
-  const visitDayRows = document.getElementById("visitDayRows");
+  const visitChart = document.getElementById("visitChart");
   const refreshStatsBtn = document.getElementById("refreshStatsBtn");
   const statsStatus = document.getElementById("statsStatus");
 
@@ -185,6 +185,27 @@
     loadStats();
   }
 
+  function renderVisitChart(days) {
+    if (!days.length) {
+      visitChart.innerHTML = '<p class="visit-chart-empty">No visit data yet.</p>';
+      return;
+    }
+    const max = Math.max.apply(null, days.map(function (d) { return d.count; }).concat([1]));
+    visitChart.innerHTML = days
+      .map(function (d) {
+        const pct = Math.round((d.count / max) * 100);
+        const label = d.date.slice(5).replace("-", "/"); // MM/DD
+        return (
+          '<div class="visit-bar-col" title="' + d.date + ": " + d.count + ' view(s)">' +
+          '<div class="visit-bar-track"><div class="visit-bar-fill" style="height:' + pct + '%"></div></div>' +
+          '<span class="visit-bar-count">' + d.count + '</span>' +
+          '<span class="visit-bar-label">' + label + '</span>' +
+          '</div>'
+        );
+      })
+      .join("");
+  }
+
   async function loadStats() {
     const password = getPassword();
     if (!password) {
@@ -196,15 +217,7 @@
       const body = await callWorker("stats");
       const stats = body.stats || { total: 0, days: [] };
       visitTotal.textContent = stats.total.toLocaleString();
-      visitDayRows.innerHTML = stats.days.length
-        ? stats.days
-            .slice()
-            .reverse()
-            .map(function (d) {
-              return "<tr><td>" + d.date + "</td><td>" + d.count + "</td></tr>";
-            })
-            .join("")
-        : '<tr class="dealer-empty-row"><td colspan="2">No visit data yet.</td></tr>';
+      renderVisitChart(stats.days || []);
       setStatus(statsStatus, stats.note ? stats.note : "Updated.", stats.note ? "error" : "success");
     } catch (err) {
       setStatus(statsStatus, "Could not load stats: " + err.message, "error");

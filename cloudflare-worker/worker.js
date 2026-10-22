@@ -133,6 +133,48 @@ async function getVisitStats(env) {
   return { total: parseInt(totalRaw, 10) || 0, days };
 }
 
+// ---- Brute-force protection for the admin password ----
+// Tracks failed attempts per client IP in the same KV namespace used for visits.
+const MAX_LOGIN_ATTEMPTS = 8;
+const LOGIN_LOCKOUT_SECONDS = 15 * 60;
+
+function clientIp(request) {
+  return request.headers.get("cf-connecting-ip") || "unknown";
+}
+
+async function isLockedOut(env, ip) {
+  if (!env.VISITS) return false; // KV not bound; fail open rather than lock everyone out
+  const raw = await env.VISITS.get("login_fail:" + ip);
+  return (parseInt(raw, 10) || 0) >= MAX_LOGIN_ATTEMPTS;
+}
+
+async function recordFailedLogin(env, ip) {
+  if (!env.VISITS) return;
+  const key = "login_fail:" + ip;
+  const count = (parseInt(await env.VISITS.get(key), 10) || 0) + 1;
+  await env.VISITS.put(key, String(count), { expirationTtl: LOGIN_LOCKOUT_SECONDS });
+}
+
+async function clearFailedLogins(env, ip) {
+  if (!env.VISITS) return;
+  await env.VISITS.delete("login_fail:" + ip).catch(function () {});
+}
+
+// ---- Basic bounds checking for saved dealer data (defense against abuse) ----
+function validateDealerData(data) {
+  if (!data || typeof data !== "object") return "Invalid data";
+  const dealers = data.dealers || [];
+  const districts = data.districts || [];
+  if (dealers.length > 5000) return "Too many dealers";
+  if (districts.length > 1000) return "Too many districts";
+  for (const d of dealers) {
+    if (String(d.name || "").length > 200) return "Dealer name too long";
+    if (String(d.phone || "").length > 20) return "Phone number too long";
+    if (String(d.address || "").length > 500) return "Address too long";
+  }
+  return null;
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
@@ -160,9 +202,16 @@ export default {
       }
     }
 
+    const ip = clientIp(request);
+    if (await isLockedOut(env, ip)) {
+      return json({ error: "Too many failed attempts. Try again in 15 minutes." }, 429);
+    }
+
     if (!body || body.password !== env.ADMIN_PASSWORD) {
+      await recordFailedLogin(env, ip);
       return json({ error: "Invalid password" }, 401);
     }
+    await clearFailedLogins(env, ip);
 
     try {
       if (body.action === "load") {
@@ -172,6 +221,8 @@ export default {
 
       if (body.action === "save") {
         if (!body.data) return json({ error: "Missing data" }, 400);
+        const validationError = validateDealerData(body.data);
+        if (validationError) return json({ error: validationError }, 400);
         await saveData(env.GITHUB_TOKEN, body.data, body.message);
         return json({ ok: true });
       }

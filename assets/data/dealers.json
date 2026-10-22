@@ -60,6 +60,12 @@
       "name": "Vasavi Polymers",
       "phone": "9849079474",
       "address": "PLOT NO 10, MIE Rd, Indra Reddy Allwyn Colony, Hafeezpet, Hyderabad, Telangana 500049"
+    },
+    {
+      "district": "Raichur",
+      "name": "AIG electricals",
+      "phone": "4325643213",
+      "address": "AIG street"
     }
   ]
 }

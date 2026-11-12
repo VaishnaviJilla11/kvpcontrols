@@ -2,6 +2,116 @@
 (function () {
   "use strict";
 
+  /* ---------------- D.O.L. starter six-sided 3D viewer ---------------- */
+  const dolCarousel = document.getElementById("dolCarousel");
+  if (dolCarousel) {
+    const slides = Array.from(dolCarousel.querySelectorAll(".dol-carousel-slide"));
+    const dots = Array.from(dolCarousel.querySelectorAll("[data-dol-slide]"));
+    const viewerSlide = slides.findIndex(function (slide) { return slide.id === "dolViewerSlide"; });
+    let activeSlide = 0;
+
+    function showDolSlide(index) {
+      activeSlide = (index + slides.length) % slides.length;
+      slides.forEach(function (slide, slideIndex) {
+        const active = slideIndex === activeSlide;
+        slide.hidden = !active;
+        slide.setAttribute("aria-hidden", String(!active));
+      });
+      dots.forEach(function (dot, dotIndex) {
+        const active = dotIndex === activeSlide;
+        dot.classList.toggle("active", active);
+        if (active) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
+    }
+
+    const show360 = document.getElementById("dolShow360");
+    const showProduct = document.getElementById("dolShowProduct");
+    const previous = document.getElementById("dolPreviousSlide");
+    const next = document.getElementById("dolNextSlide");
+    if (show360) show360.addEventListener("click", function () {
+      showDolSlide(viewerSlide);
+      const stage = document.getElementById("dolViewerStage");
+      if (stage) stage.focus();
+    });
+    if (showProduct) showProduct.addEventListener("click", function () {
+      showDolSlide(0);
+      if (show360) show360.focus();
+    });
+    if (previous) previous.addEventListener("click", function () { showDolSlide(activeSlide - 1); });
+    if (next) next.addEventListener("click", function () { showDolSlide(activeSlide + 1); });
+    dots.forEach(function (dot) {
+      dot.addEventListener("click", function () { showDolSlide(Number(dot.dataset.dolSlide)); });
+    });
+    showDolSlide(0);
+  }
+
+  const dolBox = document.getElementById("dolBox");
+  const dolStage = document.getElementById("dolViewerStage");
+  if (dolBox && dolStage) {
+    let rotateX = -16;
+    let rotateY = -28;
+    let pointerId = null;
+    let lastX = 0;
+    let lastY = 0;
+
+    function paintDolBox() {
+      dolBox.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+    }
+
+    function rotateBy(x, y) {
+      rotateY += x;
+      rotateX += y;
+      paintDolBox();
+    }
+
+    dolStage.addEventListener("pointerdown", function (event) {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      pointerId = event.pointerId;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      dolStage.setPointerCapture(pointerId);
+    });
+
+    dolStage.addEventListener("pointermove", function (event) {
+      if (event.pointerId !== pointerId) return;
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      rotateBy(dx * 0.75, -dy * 0.65);
+    });
+
+    function stopDolDrag(event) {
+      if (event.pointerId === pointerId) pointerId = null;
+    }
+    dolStage.addEventListener("pointerup", stopDolDrag);
+    dolStage.addEventListener("pointercancel", stopDolDrag);
+    dolStage.addEventListener("lostpointercapture", stopDolDrag);
+
+    dolStage.addEventListener("keydown", function (event) {
+      const rotations = {
+        ArrowLeft: [-15, 0], ArrowRight: [15, 0],
+        ArrowUp: [0, -12], ArrowDown: [0, 12],
+      };
+      if (!rotations[event.key]) return;
+      event.preventDefault();
+      rotateBy(rotations[event.key][0], rotations[event.key][1]);
+    });
+
+    const leftButton = document.getElementById("dolRotateLeft");
+    const rightButton = document.getElementById("dolRotateRight");
+    const resetButton = document.getElementById("dolResetView");
+    if (leftButton) leftButton.addEventListener("click", function () { rotateBy(-30, 0); });
+    if (rightButton) rightButton.addEventListener("click", function () { rotateBy(30, 0); });
+    if (resetButton) resetButton.addEventListener("click", function () {
+      rotateX = -16;
+      rotateY = -28;
+      paintDolBox();
+      dolStage.focus();
+    });
+  }
+
   /* ---------------- Visit tracking (one count per browser session) ---------------- */
   (function trackVisit() {
     // Only track real visits to the live domain — skip local file:// testing,

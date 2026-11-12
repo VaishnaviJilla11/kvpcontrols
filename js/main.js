@@ -26,20 +26,11 @@
     }
 
     const show360 = document.getElementById("dolShow360");
-    const showProduct = document.getElementById("dolShowProduct");
-    const previous = document.getElementById("dolPreviousSlide");
-    const next = document.getElementById("dolNextSlide");
     if (show360) show360.addEventListener("click", function () {
       showDolSlide(viewerSlide);
       const stage = document.getElementById("dolViewerStage");
       if (stage) stage.focus();
     });
-    if (showProduct) showProduct.addEventListener("click", function () {
-      showDolSlide(0);
-      if (show360) show360.focus();
-    });
-    if (previous) previous.addEventListener("click", function () { showDolSlide(activeSlide - 1); });
-    if (next) next.addEventListener("click", function () { showDolSlide(activeSlide + 1); });
     dots.forEach(function (dot) {
       dot.addEventListener("click", function () { showDolSlide(Number(dot.dataset.dolSlide)); });
     });

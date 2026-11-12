@@ -46,6 +46,25 @@
       });
       productSlide.addEventListener("pointercancel", function () { swipeStart = null; });
     }
+    const viewerSlideElement = document.getElementById("dolViewerSlide");
+    if (viewerSlideElement) {
+      let swipeStart = null;
+      viewerSlideElement.addEventListener("pointerdown", function (event) {
+        if (event.pointerType !== "touch") return;
+        swipeStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+      });
+      viewerSlideElement.addEventListener("pointerup", function (event) {
+        if (!swipeStart || swipeStart.pointerId !== event.pointerId) return;
+        const dx = event.clientX - swipeStart.x;
+        const dy = event.clientY - swipeStart.y;
+        swipeStart = null;
+        if (activeSlide === viewerSlide && dx < -45 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+          showDolSlide(0);
+          if (dots[0]) dots[0].focus();
+        }
+      });
+      viewerSlideElement.addEventListener("pointercancel", function () { swipeStart = null; });
+    }
     if (show360) show360.addEventListener("click", function () {
       showDolSlide(viewerSlide);
       const stage = document.getElementById("dolViewerStage");

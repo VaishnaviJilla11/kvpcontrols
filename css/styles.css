@@ -1181,6 +1181,7 @@ section {
 }
 
 #dolProductSlide { touch-action: pan-y; }
+#dolViewerSlide { touch-action: pan-y; }
 .dol-swipe-hint { display: none; }
 
 .dol-carousel-slide > img {

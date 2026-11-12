@@ -8,6 +8,7 @@
     const slides = Array.from(dolCarousel.querySelectorAll(".dol-carousel-slide"));
     const dots = Array.from(dolCarousel.querySelectorAll("[data-dol-slide]"));
     const viewerSlide = slides.findIndex(function (slide) { return slide.id === "dolViewerSlide"; });
+    const productSlide = document.getElementById("dolProductSlide");
     let activeSlide = 0;
 
     function showDolSlide(index) {
@@ -26,6 +27,25 @@
     }
 
     const show360 = document.getElementById("dolShow360");
+    if (productSlide) {
+      let swipeStart = null;
+      productSlide.addEventListener("pointerdown", function (event) {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        swipeStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+      });
+      productSlide.addEventListener("pointerup", function (event) {
+        if (!swipeStart || swipeStart.pointerId !== event.pointerId) return;
+        const dx = event.clientX - swipeStart.x;
+        const dy = event.clientY - swipeStart.y;
+        swipeStart = null;
+        if (activeSlide === 0 && dx < -45 && Math.abs(dx) > Math.abs(dy) * 1.25) {
+          showDolSlide(viewerSlide);
+          const stage = document.getElementById("dolViewerStage");
+          if (stage) stage.focus();
+        }
+      });
+      productSlide.addEventListener("pointercancel", function () { swipeStart = null; });
+    }
     if (show360) show360.addEventListener("click", function () {
       showDolSlide(viewerSlide);
       const stage = document.getElementById("dolViewerStage");

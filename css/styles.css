@@ -1180,6 +1180,9 @@ section {
   gap: 14px;
 }
 
+#dolProductSlide { touch-action: pan-y; }
+.dol-swipe-hint { display: none; }
+
 .dol-carousel-slide > img {
   max-width: 100%;
   max-height: 320px;
@@ -1426,6 +1429,14 @@ section {
 
   .pd-info h1 {
     font-size: 1.6rem;
+  }
+
+  .dol-swipe-hint {
+    display: block;
+    margin: -4px 0 0;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    text-align: center;
   }
 }
 

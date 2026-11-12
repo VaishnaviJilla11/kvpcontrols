@@ -1263,6 +1263,7 @@ section {
   display: grid;
   place-items: center;
   perspective: 850px;
+  -webkit-perspective: 850px;
   cursor: grab;
   touch-action: none;
   outline-offset: -4px;
@@ -1276,6 +1277,7 @@ section {
   width: var(--box-width);
   height: var(--box-height);
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transform: rotateX(-16deg) rotateY(-28deg);
   transition: transform 120ms ease-out;
   will-change: transform;
@@ -1289,6 +1291,7 @@ section {
   background: #f3f4f5;
   border: 1px solid rgba(11, 37, 69, 0.32);
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .dol-box-face img {
@@ -1351,8 +1354,9 @@ section {
 @media (max-width: 420px) {
   .pd-media.dol-product-media { padding: 12px; }
   .dol-carousel-slide { min-height: 320px; }
+  .dol-carousel-slide > img { max-height: 260px; }
   .dol-viewer { --box-width: 205px; --box-height: 132px; --box-depth: 118px; padding-right: 8px; padding-left: 8px; }
-  .dol-viewer-stage { height: 250px; }
+  .dol-viewer-stage { height: 220px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

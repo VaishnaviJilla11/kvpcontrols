@@ -88,12 +88,23 @@
   if (dolBox && dolStage) {
     let rotateX = -16;
     let rotateY = -28;
-    let pointerId = null;
+    let boxScale = 1;
     let lastX = 0;
     let lastY = 0;
+    let pinchStartDistance = 0;
+    let pinchStartScale = 1;
+    const activePointers = new Map();
 
     function paintDolBox() {
-      dolBox.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+      dolBox.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) scale(" + boxScale + ")";
+    }
+
+    function getPinchDistance() {
+      const points = Array.from(activePointers.values()).slice(0, 2);
+      if (points.length < 2) return 0;
+      const dx = points[0].x - points[1].x;
+      const dy = points[0].y - points[1].y;
+      return Math.sqrt(dx * dx + dy * dy);
     }
 
     function rotateBy(x, y) {
@@ -104,15 +115,29 @@
 
     dolStage.addEventListener("pointerdown", function (event) {
       if (event.pointerType === "mouse" && event.button !== 0) return;
-      pointerId = event.pointerId;
-      lastX = event.clientX;
-      lastY = event.clientY;
+      activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
       dolBox.classList.add("is-dragging");
-      dolStage.setPointerCapture(pointerId);
+      dolStage.setPointerCapture(event.pointerId);
+      if (activePointers.size === 1) {
+        lastX = event.clientX;
+        lastY = event.clientY;
+      } else if (activePointers.size === 2) {
+        pinchStartDistance = getPinchDistance();
+        pinchStartScale = boxScale;
+      }
     });
 
     dolStage.addEventListener("pointermove", function (event) {
-      if (event.pointerId !== pointerId) return;
+      if (!activePointers.has(event.pointerId)) return;
+      activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (activePointers.size >= 2) {
+        const distance = getPinchDistance();
+        if (pinchStartDistance > 0) {
+          boxScale = Math.max(1, Math.min(2.4, pinchStartScale * distance / pinchStartDistance));
+          paintDolBox();
+        }
+        return;
+      }
       const dx = event.clientX - lastX;
       const dy = event.clientY - lastY;
       lastX = event.clientX;
@@ -121,9 +146,17 @@
     });
 
     function stopDolDrag(event) {
-      if (event.pointerId === pointerId) {
-        pointerId = null;
-        dolBox.classList.remove("is-dragging");
+      if (activePointers.has(event.pointerId)) {
+        activePointers.delete(event.pointerId);
+        if (activePointers.size === 1) {
+          const remaining = Array.from(activePointers.values())[0];
+          lastX = remaining.x;
+          lastY = remaining.y;
+        }
+        if (activePointers.size === 0) {
+          pinchStartDistance = 0;
+          dolBox.classList.remove("is-dragging");
+        }
       }
     }
     dolStage.addEventListener("pointerup", stopDolDrag);
@@ -148,6 +181,7 @@
     if (resetButton) resetButton.addEventListener("click", function () {
       rotateX = -16;
       rotateY = -28;
+      boxScale = 1;
       paintDolBox();
       dolStage.focus();
     });

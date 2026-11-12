@@ -27,6 +27,8 @@
     }
 
     const show360 = document.getElementById("dolShow360");
+    const previous = document.getElementById("dolPreviousSlide");
+    const next = document.getElementById("dolNextSlide");
     if (productSlide) {
       let swipeStart = null;
       productSlide.addEventListener("pointerdown", function (event) {
@@ -70,6 +72,8 @@
       const stage = document.getElementById("dolViewerStage");
       if (stage) stage.focus();
     });
+    if (previous) previous.addEventListener("click", function () { showDolSlide(activeSlide - 1); });
+    if (next) next.addEventListener("click", function () { showDolSlide(activeSlide + 1); });
     dots.forEach(function (dot) {
       dot.addEventListener("click", function () { showDolSlide(Number(dot.dataset.dolSlide)); });
     });

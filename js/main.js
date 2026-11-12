@@ -52,7 +52,10 @@
     if (viewerSlideElement) {
       let swipeStart = null;
       viewerSlideElement.addEventListener("pointerdown", function (event) {
+        swipeStart = null;
         if (event.pointerType !== "touch") return;
+        // A drag that starts on the 3D stage is for rotating the box, never for changing slides.
+        if (event.target.closest(".dol-viewer-stage")) return;
         swipeStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
       });
       viewerSlideElement.addEventListener("pointerup", function (event) {

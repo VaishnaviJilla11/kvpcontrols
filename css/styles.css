@@ -1275,6 +1275,8 @@ section {
   will-change: transform;
 }
 
+.dol-box.is-dragging { transition: none; }
+
 .dol-box-face {
   position: absolute;
   overflow: hidden;

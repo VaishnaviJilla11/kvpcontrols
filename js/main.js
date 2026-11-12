@@ -107,6 +107,7 @@
       pointerId = event.pointerId;
       lastX = event.clientX;
       lastY = event.clientY;
+      dolBox.classList.add("is-dragging");
       dolStage.setPointerCapture(pointerId);
     });
 
@@ -120,7 +121,10 @@
     });
 
     function stopDolDrag(event) {
-      if (event.pointerId === pointerId) pointerId = null;
+      if (event.pointerId === pointerId) {
+        pointerId = null;
+        dolBox.classList.remove("is-dragging");
+      }
     }
     dolStage.addEventListener("pointerup", stopDolDrag);
     dolStage.addEventListener("pointercancel", stopDolDrag);

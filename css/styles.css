@@ -1180,8 +1180,8 @@ section {
   gap: 14px;
 }
 
-#dolProductSlide,
-#dolViewerSlide { touch-action: pinch-zoom; }
+#dolProductSlide { touch-action: pinch-zoom; }
+#dolViewerSlide { touch-action: none; }
 .dol-swipe-hint { display: none; }
 
 .dol-carousel-slide > img {
@@ -1259,10 +1259,6 @@ section {
   cursor: grab;
   touch-action: none;
   outline-offset: -4px;
-}
-
-@supports (touch-action: pinch-zoom) {
-  .dol-viewer-stage { touch-action: pinch-zoom; }
 }
 
 .dol-viewer-stage:active { cursor: grabbing; }

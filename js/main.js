@@ -358,9 +358,9 @@
       const englishQuestion = el.previousElementSibling;
       if (englishQuestion) {
         el.dataset.en = englishQuestion.textContent.trim();
-        el.textContent = el.dataset.en;
-        el.hidden = isCorruptedTranslation(el.dataset.te);
+        el.textContent = el.dataset.te;
       }
+      el.hidden = true;
     });
     faqSecondaryEls.forEach(function (el) {
       const englishAnswer = el.previousElementSibling;
@@ -381,12 +381,12 @@
       faqQSecondaryEls.forEach(function (el) {
         const translation = getTranslation(el, lang);
         el.textContent = translation.text;
-        el.hidden = translation.label === "English";
+        el.hidden = lang === "en" || translation.label === "English";
       });
 
       faqSecondaryEls.forEach(function (el) {
         const translation = getTranslation(el, lang);
-        el.hidden = translation.label === "English";
+        el.hidden = lang === "en" || translation.label === "English";
         const label = document.createElement("strong");
         label.textContent = translation.label + ": ";
         el.replaceChildren(label, document.createTextNode(translation.text));

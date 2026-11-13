@@ -337,22 +337,59 @@
     const faqQSecondaryEls = document.querySelectorAll(".faq-q-te");
     const langLabels = { te: "\u0c24\u0c46\u0c32\u0c41\u0c17\u0c41", ta: "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd", hi: "\u0939\u093f\u0928\u094d\u0926\u0940", kn: "\u0c95\u0ca8\u0ccd\u0ca8\u0ca1" };
 
+    function isCorruptedTranslation(value) {
+      if (!value) return true;
+      const compact = value.replace(/\s/g, "");
+      const questionMarks = (compact.match(/\?/g) || []).length;
+      return questionMarks >= 3 && questionMarks / compact.length > 0.1;
+    }
+
+    function getTranslation(el, lang) {
+      const candidate = el.dataset[lang];
+      if (lang !== "en" && candidate && !isCorruptedTranslation(candidate)) {
+        return { text: candidate, label: langLabels[lang] };
+      }
+      return { text: el.dataset.en || "", label: "English" };
+    }
+
+    // These two product pages contain legacy question-mark placeholder text.
+    // Preserve their actual English FAQ copy as a safe fallback instead.
+    faqQSecondaryEls.forEach(function (el) {
+      const englishQuestion = el.previousElementSibling;
+      if (englishQuestion) {
+        el.dataset.en = englishQuestion.textContent.trim();
+        el.textContent = el.dataset.en;
+        el.hidden = isCorruptedTranslation(el.dataset.te);
+      }
+    });
+    faqSecondaryEls.forEach(function (el) {
+      const englishAnswer = el.previousElementSibling;
+      if (englishAnswer) {
+        el.dataset.en = englishAnswer.textContent.replace(/^English:\s*/i, "").trim();
+      }
+      el.hidden = true;
+    });
+
     langSelect.addEventListener("change", function () {
       const lang = langSelect.value;
-      const key = lang === "en" ? "te" : lang;
 
       i18nEls.forEach(function (el) {
         el.dataset.en = el.dataset.en || el.textContent;
-        el.textContent = lang === "en" ? el.dataset.en : (el.dataset[lang] || el.dataset.en);
+        el.textContent = getTranslation(el, lang).text;
       });
 
       faqQSecondaryEls.forEach(function (el) {
-        el.textContent = el.dataset[key] || el.textContent;
+        const translation = getTranslation(el, lang);
+        el.textContent = translation.text;
+        el.hidden = translation.label === "English";
       });
 
       faqSecondaryEls.forEach(function (el) {
-        const text = el.dataset[key] || el.dataset.te;
-        el.innerHTML = "<strong>" + langLabels[key] + ":</strong> " + text;
+        const translation = getTranslation(el, lang);
+        el.hidden = translation.label === "English";
+        const label = document.createElement("strong");
+        label.textContent = translation.label + ": ";
+        el.replaceChildren(label, document.createTextNode(translation.text));
       });
     });
   }

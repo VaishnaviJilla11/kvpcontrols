@@ -522,4 +522,14 @@
   /* ---------------- Footer year ---------------- */
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* Keep fixed contact buttons from covering footer links on small screens. */
+  const footer = document.querySelector(".site-footer");
+  const floatingContact = document.querySelector(".float-contact");
+  if (footer && floatingContact && "IntersectionObserver" in window) {
+    const footerObserver = new IntersectionObserver(function (entries) {
+      floatingContact.classList.toggle("is-footer-visible", entries[0].isIntersecting);
+    });
+    footerObserver.observe(footer);
+  }
 })();

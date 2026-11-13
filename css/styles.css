@@ -2038,23 +2038,123 @@ section {
 
 /* ---------- Footer ---------- */
 .site-footer {
-  background: var(--navy-dark);
-  color: rgba(255, 255, 255, 0.7);
-  padding: 32px 0;
-  font-size: 0.85rem;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
-.footer-row {
-  display: flex;
-  justify-content: space-between;
+.footer-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(140px, 0.7fr) minmax(220px, 0.9fr);
   align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  gap: 32px;
+  padding: 24px 0 20px;
 }
 
-.footer-row .tagline {
-  color: var(--orange);
+.footer-brand-name {
+  display: inline-flex;
+  align-items: center;
+  color: var(--navy);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.footer-brand-name img {
+  display: block;
+  width: min(160px, 100%);
+  height: auto;
+  object-fit: contain;
+}
+
+.footer-brand > p {
+  margin: 5px 0 0;
+  color: var(--orange-dark);
+  font-size: 0.78rem;
   font-weight: 700;
+}
+
+.footer-nav,
+.footer-connect {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-nav h2,
+.footer-connect h2 {
+  margin: 0 0 10px;
+  color: var(--navy);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.footer-nav a {
+  margin: 0 0 7px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.footer-nav a:hover {
+  color: var(--navy);
+  transform: translateX(3px);
+}
+
+.footer-social-links {
+  display: flex;
+  gap: 8px;
+}
+
+.footer-social-link {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  color: #ff0033;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.footer-social-link:hover {
+  transform: translateY(-3px);
+  border-color: transparent;
+}
+
+.footer-social-link.youtube:hover { background: #ff0033; color: var(--white); }
+.footer-social-link.whatsapp { color: #25d366; }
+.footer-social-link.whatsapp:hover { background: #25d366; color: var(--white); }
+.footer-social-link.call { color: var(--navy); }
+.footer-social-link.call:hover { background: var(--navy); color: var(--white); }
+
+.footer-social-link svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  fill: currentColor;
+}
+
+.footer-social-link:focus-visible,
+.footer-brand-name:focus-visible,
+.footer-nav a:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 4px;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  padding: 11px 0 13px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-align: center;
 }
 
 /* ---------- Floating call/WhatsApp buttons ---------- */
@@ -2066,6 +2166,14 @@ section {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.float-contact.is-footer-visible {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
 }
 
 .float-btn {
@@ -2118,6 +2226,15 @@ section {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
+  .footer-main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px 32px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
   .hero .container {
     grid-template-columns: 1fr;
   }
@@ -2136,6 +2253,14 @@ section {
 }
 
 @media (max-width: 720px) {
+  .footer-main {
+    padding: 18px 0 16px;
+  }
+
+  .footer-bottom {
+    padding: 10px 0 12px;
+  }
+
   .trust-strip .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2312,5 +2437,20 @@ section {
 
   section {
     padding: 44px 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .footer-main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px 18px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-social-links {
+    gap: 6px;
   }
 }
